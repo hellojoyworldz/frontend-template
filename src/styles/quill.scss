@@ -1,0 +1,96 @@
+/* Quill Editor Styles */
+.ql-align-center {
+  text-align: center;
+
+  img {
+    margin: auto;
+  }
+}
+
+.ql-align-left {
+  text-align: left;
+}
+
+.ql-align-right {
+  text-align: right;
+
+  img {
+    margin: 0 0 0 auto;
+  }
+}
+
+.ql-size-small {
+  font-size: 0.75em;
+}
+
+.ql-size-large {
+  font-size: 1.5em;
+}
+
+.ql-size-huge {
+  font-size: 2.5em;
+}
+
+.ql-bold {
+  font-weight: bold;
+}
+
+.ql-italic {
+  font-style: italic;
+}
+
+.ql-underline {
+  text-decoration: underline;
+}
+
+.ql-strike {
+  text-decoration: line-through;
+}
+
+.ql-color-red {
+  color: #e60000;
+}
+
+.ql-color-orange {
+  color: #f50;
+}
+
+.ql-color-yellow {
+  color: #fb0;
+}
+
+.ql-color-green {
+  color: #5c5;
+}
+
+.ql-color-blue {
+  color: #06c;
+}
+
+.ql-color-purple {
+  color: #90f;
+}
+
+.ql-bg-red {
+  background-color: #e60000;
+}
+
+.ql-bg-orange {
+  background-color: #f50;
+}
+
+.ql-bg-yellow {
+  background-color: #fb0;
+}
+
+.ql-bg-green {
+  background-color: #5c5;
+}
+
+.ql-bg-blue {
+  background-color: #06c;
+}
+
+.ql-bg-purple {
+  background-color: #90f;
+}
