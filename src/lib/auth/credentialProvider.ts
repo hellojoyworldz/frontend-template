@@ -7,7 +7,7 @@ export const credentialProvider = CredentialsProvider({
     username: { label: "Username", type: "text", placeholder: "jsmith" },
     password: { label: "Password", type: "password" },
   },
-  async authorize(credentials, req) {
+  async authorize(credentials) {
     const response = await fetch(process.env.GRAPHQL_URL!, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -21,14 +21,17 @@ export const credentialProvider = CredentialsProvider({
     });
 
     const json = await response.json();
-    const user = json?.data?.login;
+    const login = json?.data?.login;
 
-    if (!user) return null;
+    if (!response.ok || !login?.access_token) return null;
 
-    if (response.ok && user) {
-      return user;
-    }
-
-    return null;
+    return {
+      id: credentials?.username ?? "credentials",
+      email: credentials?.username,
+      accessToken: login.access_token,
+      refreshToken: login.refresh_token,
+      tokenType: login.token_type,
+      expiresIn: login.expires_in,
+    };
   },
 });

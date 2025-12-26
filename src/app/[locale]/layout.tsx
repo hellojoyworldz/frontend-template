@@ -1,6 +1,8 @@
-import { getTranslations, getLocale } from "next-intl/server";
-import Providers from "./providers";
+import { getLocale, getTranslations } from "next-intl/server";
+import { getServerSession } from "next-auth";
 import clsx from "clsx";
+import Providers from "./providers";
+import { authOptions } from "@/lib/auth/auth";
 import { pretendard, noto, notoSc, poppins } from "@/lib/fonts";
 import "@/styles/globals.css";
 
@@ -51,12 +53,14 @@ export function generateViewport() {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const locale = await getLocale();
+  const [locale, session] = await Promise.all([getLocale(), getServerSession(authOptions)]);
 
   return (
     <html lang={locale}>
       <body className={clsx(pretendard.variable, noto.variable, notoSc.variable, poppins.variable, "antialiased")}>
-        <Providers locale={locale}>{children}</Providers>
+        <Providers locale={locale} session={session}>
+          {children}
+        </Providers>
       </body>
     </html>
   );

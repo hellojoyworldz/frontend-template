@@ -1,14 +1,16 @@
-import { ApolloLink } from "@apollo/client";
+import { SetContextLink } from "@apollo/client/link/context";
+import { getSession } from "next-auth/react";
 
-const authLink = new ApolloLink((operation, forward) => {
-  operation.setContext(({ headers }: { headers?: Record<string, string> }) => ({
+const authLink = new SetContextLink(async (prevContext) => {
+  const session = await getSession();
+  const accessToken = session?.accessToken;
+
+  return {
     headers: {
-      authorization: `Bearer `,
-      ...headers,
+      ...prevContext.headers,
+      ...(accessToken ? { authorization: `Bearer ${accessToken}` } : {}),
     },
-  }));
-
-  return forward(operation);
+  };
 });
 
 export default authLink;

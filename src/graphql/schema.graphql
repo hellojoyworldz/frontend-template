@@ -1,0 +1,3275 @@
+"""
+어드민 정보
+"""
+type Admin {
+  id: ID!
+
+  """
+  이름
+  """
+  name: String!
+
+  """
+  역할
+  """
+  role: String
+}
+
+"""
+로그인 정보
+"""
+type AdminAuthPayload {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  액세스 토큰
+  """
+  access_token: String
+
+  """
+  리프레쉬 토큰
+  """
+  refresh_token: String
+
+  """
+  액세스 토큰 만료 시간
+  """
+  expires_in: String
+
+  """
+  토큰 타입
+  """
+  token_type: String
+
+  """
+  유저 정보
+  """
+  admin: Admin
+}
+
+"""
+어드민 로그인 Input
+"""
+input AdminLoginInput {
+  """
+  관리자 아이디
+  """
+  name: String!
+
+  """
+  관리자 비밀번호
+  """
+  password: String!
+}
+
+"""
+A paginated list of Admin items.
+"""
+type AdminPaginator {
+  """
+  Pagination information about the list of items.
+  """
+  paginatorInfo: PaginatorInfo!
+
+  """
+  A list of Admin items.
+  """
+  data: [Admin!]!
+}
+
+"""
+관리자 거절 Input
+"""
+input AdminRejectInput {
+  """
+  로그인 아이디
+  """
+  login_id: String!
+}
+
+input AdminTicketInput {
+  """
+  users.id
+  """
+  id: ID!
+
+  """
+  지급 일 수(최대: 100일)
+  """
+  days: Int!
+}
+
+"""
+인증 단계
+"""
+enum AuthStepEnum {
+  """
+  0단계 (미인증)
+  """
+  ZERO
+
+  """
+  1단계 (이메일 인증)
+  """
+  ONE
+
+  """
+  2단계 (승인 대기)
+  """
+  TWO
+
+  """
+  3단계 (관리자 거절)
+  """
+  THREE
+
+  """
+  4단계 (관리자 승인)
+  """
+  FOUR
+}
+
+"""
+봇 계정 정보
+"""
+type BotAccount {
+  id: ID!
+
+  """
+  계정 이름
+  """
+  name: String
+
+  """
+  심볼
+  """
+  symbol: SymbolEnum
+
+  """
+  API 키
+  """
+  api_key: String
+
+  """
+  시크릿 키
+  """
+  secret_key: String
+
+  """
+  테스트넷 사용 여부
+  """
+  sandbox: Boolean
+
+  """
+  레버리지 배수
+  """
+  leverage: Int
+
+  """
+  기본 주문 수량(XRP)
+  """
+  base_qty: Float
+
+  """
+  최대 물타기 진입 횟수
+  """
+  max_entries: Int
+
+  """
+  익절 비율
+  """
+  tp_rate: Float
+
+  """
+  계정 활성화 상태
+  """
+  is_active: Boolean
+
+  """
+  생성일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+
+  """
+  현재 추가 주문
+  """
+  entries_count: Int
+}
+
+"""
+봇 포지션
+"""
+enum BotPositionEnum {
+  LONG
+  SHORT
+}
+
+type BotResponse {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  데이터
+  """
+  data: [BotAccount]
+}
+
+type CacheResponse {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  캐시 키
+  """
+  data: String
+}
+
+"""
+이름 변경 Input
+"""
+input ChangeNameInput {
+  name: String!
+}
+
+"""
+패스워드 수정 input
+"""
+input ChangePasswordInput {
+  """
+  기존 비밀번호
+  """
+  old_password: String!
+
+  """
+  새 비밀번호
+  """
+  password: String!
+
+  """
+  새 비밀번호 확인
+  """
+  password_confirmation: String!
+}
+
+"""
+문자 인증 코드 보내기 Input
+"""
+input CheckSmsCodeInput {
+  """
+  국번
+  """
+  country_code: String!
+
+  """
+  휴대폰 번호
+  """
+  phone_number: String!
+
+  """
+  문자 인증 코드
+  """
+  sms_code: String!
+}
+
+"""
+코인 타입
+"""
+enum CoinTypeEnum {
+  """
+  테더(바이낸스)
+  """
+  BNB
+}
+
+type CountResponse {
+  """
+  상태 값
+  """
+  status: String
+
+  """
+  메시지
+  """
+  message: String
+
+  """
+  입금 카운트
+  """
+  count: Int
+}
+
+"""
+어드민 권한 부여 Input
+"""
+input CreateAdminInput {
+  """
+  관리자 아이디
+  """
+  name: String!
+
+  """
+  관리자 비밀번호
+  """
+  password: String!
+}
+
+"""
+거래소 API 연결 Input
+"""
+input CreateBotAccountInput {
+  """
+  API 키
+  """
+  api_key: String!
+
+  """
+  SECRET 키
+  """
+  secret_key: String!
+}
+
+"""
+Faq 등록 input
+"""
+input CreateFaqInput {
+  """
+  언어
+  """
+  locale: LocaleStatus!
+
+  """
+  타입 (1: 지갑 관련, 2: 서비스 관련)
+  """
+  type: FaqTypeEnum!
+
+  """
+  제목
+  """
+  title: String!
+
+  """
+  내용
+  """
+  content: String!
+
+  """
+  상단 고정 여부
+  """
+  is_fixed: Int
+
+  """
+  Faq 노출 여부
+  """
+  is_active: Int
+
+  """
+  노출 시작일
+  """
+  started_at: DateTime
+
+  """
+  노출 종료일
+  """
+  ended_at: DateTime
+
+  """
+  업로드된 이미지 아이디 배열
+  """
+  images: [Int!]
+
+  """
+  업로드된 썸네일 아이디
+  """
+  thumbnail: Int
+}
+
+"""
+공지사항 등록 input
+"""
+input CreateNoticeInput {
+  """
+  언어
+  """
+  locale: LocaleStatus!
+
+  """
+  제목
+  """
+  title: String!
+
+  """
+  내용
+  """
+  content: String!
+
+  """
+  상단 고정 여부
+  """
+  is_fixed: Int
+
+  """
+  공지사항 노출 여부
+  """
+  is_active: Int
+
+  """
+  노출 시작일
+  """
+  started_at: DateTime
+
+  """
+  노출 종료일
+  """
+  ended_at: DateTime
+
+  """
+  업로드된 이미지 아이디 배열
+  """
+  images: [Int!]
+
+  """
+  업로드된 썸네일 아이디
+  """
+  thumbnail: Int
+}
+
+input CreatePartnerInput {
+  """
+  이름
+  """
+  name: String!
+
+  """
+  비밀번호
+  """
+  password: String!
+
+  """
+  수수료
+  """
+  fee: Float!
+
+  """
+  메모1
+  """
+  memo1: String
+
+  """
+  메모2
+  """
+  memo2: String
+}
+
+"""
+티켓 생성 Input
+"""
+input CreateTicketInput {
+  """
+  이름
+  """
+  name: String!
+
+  """
+  일 수
+  """
+  days: Int!
+
+  """
+  보너스 일 수
+  """
+  bonus_days: Int!
+
+  """
+  가격
+  """
+  price: Float!
+}
+
+"""
+내부 지갑 생성 Input
+"""
+input CreateUserInternalWalletInput {
+  """
+  코인 아이디
+  """
+  coin_id: CoinTypeEnum!
+}
+
+"""
+A date string with format `Y-m-d`, e.g. `2011-05-23`.
+"""
+scalar Date
+
+input DateRange {
+  from: Date!
+  to: Date!
+}
+
+"""
+A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`.
+"""
+scalar DateTime
+
+input DateTimeRange {
+  from: DateTime!
+  to: DateTime!
+}
+
+"""
+A datetime and timezone string in ISO 8601 format `Y-m-dTH:i:sO`, e.g. `2020-04-20T13:53:12+02:00`.
+"""
+scalar DateTimeTz
+
+"""
+A datetime string in ISO 8601 format in UTC with nanoseconds
+`YYYY-MM-DDTHH:mm:ss.SSSSSSZ`, e.g. `2020-04-20T16:20:04.000000Z`.
+"""
+scalar DateTimeUtc
+
+"""
+Faq 정보
+"""
+type Faq {
+  id: ID!
+
+  """
+  언어
+  """
+  locale: LocaleStatus!
+
+  """
+  타입 (1: 지갑 관련, 2: 서비스 관련)
+  """
+  type: FaqTypeEnum!
+
+  """
+  제목
+  """
+  title: String!
+
+  """
+  내용
+  """
+  content: String!
+
+  """
+  상단 고정 여부
+  """
+  is_fixed: Int
+
+  """
+  Faq 노출 여부
+  """
+  is_active: Int
+
+  """
+  노출 시작 시간
+  """
+  started_at: DateTime
+
+  """
+  노출 종료 시간
+  """
+  ended_at: DateTime
+
+  """
+  생성 시간
+  """
+  created_at: DateTime
+
+  """
+  수정 시간
+  """
+  updated_at: DateTime
+
+  """
+  이미지
+  """
+  images: [Image]
+
+  """
+  썸네일
+  """
+  thumbnail: Thumbnail
+
+  """
+  생성자
+  """
+  author: Admin!
+
+  """
+  이전 Faq
+  """
+  previous: PreviousFaq
+
+  """
+  다음 Faq
+  """
+  next: NextFaq
+}
+
+"""
+Faq 검색 항목
+"""
+enum FaqColumn {
+  TITLE
+  CONTENT
+  STARTED_AT
+  ENDED_AT
+}
+
+"""
+A paginated list of Faq items.
+"""
+type FaqPaginator {
+  """
+  Pagination information about the list of items.
+  """
+  paginatorInfo: PaginatorInfo!
+
+  """
+  A list of Faq items.
+  """
+  data: [Faq!]!
+}
+
+enum FaqTypeEnum {
+  WALLET
+  SERVICE
+}
+
+input FaqWhereConditions {
+  """
+  The column that is used for the condition.
+  """
+  column: FaqColumn
+
+  """
+  The operator that is used for the condition.
+  """
+  operator: SQLOperator = EQ
+
+  """
+  The value that is used for the condition.
+  """
+  value: Mixed
+
+  """
+  A set of conditions that requires all conditions to match.
+  """
+  AND: [FaqWhereConditions!]
+
+  """
+  A set of conditions that requires at least one condition to match.
+  """
+  OR: [FaqWhereConditions!]
+}
+
+"""
+패스워드 찾기 input
+"""
+input ForgotPasswordInput {
+  """
+  이름
+  """
+  login_id: String!
+}
+
+type Image {
+  id: ID!
+
+  """
+  원본 이미지
+  """
+  url: String
+
+  """
+  작은 이미지
+  """
+  thumb_small_url: String
+
+  """
+  중간 이미지
+  """
+  thumb_medium_url: String
+
+  """
+  큰 이미지
+  """
+  thumb_large_url: String
+}
+
+type Images {
+  image: [Image!]!
+}
+
+type InternalWalletResponse {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  데이터
+  """
+  data: UserInternalWallet
+}
+
+"""
+언어 설정
+"""
+enum LocaleStatus {
+  """
+  한글
+  """
+  KOREAN
+
+  """
+  영어
+  """
+  ENGLISH
+
+  """
+  중국어
+  """
+  CHINESE
+
+  """
+  러시아어
+  """
+  RUSSIAN
+}
+
+"""
+로그인 정보
+"""
+type LoginAuthPayload {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  액세스 토큰
+  """
+  access_token: String
+
+  """
+  리프레쉬 토큰
+  """
+  refresh_token: String
+
+  """
+  액세스 토큰 만료 시간
+  """
+  expires_in: String
+
+  """
+  토큰 타입
+  """
+  token_type: String
+
+  """
+  유저 정보
+  """
+  user: User
+}
+
+"""
+유저 로그인 Input
+"""
+input LoginInput {
+  """
+  로그인 아이디
+  """
+  login_id: String!
+
+  """
+  비밀번호
+  """
+  password: String!
+}
+
+"""
+마켓 시세
+"""
+type MarketPrice {
+  id: ID!
+
+  """
+  마켓명
+  """
+  name: String
+
+  """
+  엔드포인트
+  """
+  endpoint: String
+
+  """
+  거래쌍
+  """
+  symbol: String
+
+  """
+  시세
+  """
+  price: Float
+
+  """
+  생성일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+}
+
+type MessageResponse {
+  """
+  상태 값
+  """
+  status: String
+
+  """
+  메시지
+  """
+  message: String
+}
+
+"""
+Loose type that allows any value. Be careful when passing in large `Int` or `Float` literals,
+as they may not be parsed correctly on the server side. Use `String` literals if you are
+dealing with really large numbers to be on the safe side.
+"""
+scalar Mixed
+
+type Mutation {
+  """
+  업로드
+  """
+  upload(file: Upload!): Image
+
+  """
+  썸네일 업로드
+  """
+  uploadThumbnail(file: Upload!): Thumbnail
+
+  """
+  유저 로그인
+  """
+  login(input: LoginInput!): LoginAuthPayload
+
+  """
+  회원가입
+  """
+  register(input: RegisterInput!): MessageResponse
+
+  """
+  리프레쉬 토큰
+  """
+  refreshToken(refresh_token: String!): RefreshAuthPayload
+
+  """
+  로그아웃
+  """
+  logoutUser: LoginAuthPayload
+
+  """
+  유저 탈퇴
+  """
+  deleteUser: UserResponse
+
+  """
+  회원가입 이메일 인증
+  """
+  verifyEmail(input: VerifyEmailInput!): MessageResponse!
+
+  """
+  회원가입 이메일 중복 확인
+  """
+  checkEmailForCreateUser(email: String!, locale: LocaleStatus!): MessageResponse!
+
+  """
+  회원가입 인증 이메일 재전송
+  """
+  resendVerifyEmail(input: ForgotPasswordInput!): MessageResponse!
+
+  """
+  비밀번호 변경
+  """
+  changePassword(input: ChangePasswordInput): UserResponse
+
+  """
+  패스워드 재설정 메일 전송
+  """
+  requestPasswordReset(email: String!): MessageResponse!
+
+  """
+  비밀번호 재설정
+  """
+  resetPassword(input: ResetPasswordInput): UserResponse
+
+  """
+  관리자 권한 부여
+  """
+  createAdmin(input: CreateAdminInput!): MessageResponse
+
+  """
+  로케일 변경
+  """
+  changeLocale(input: UpdateLocaleInput!): UserResponse
+
+  """
+  로케일 설정(로그인x)
+  """
+  setLocale(input: UpdateLocaleInput!): MessageResponse!
+
+  """
+  문자 인증 코드 보내기
+  """
+  sendSmsCode(input: SendSmsCodeInput!): MessageResponse
+
+  """
+  문자 인증 코드 검증
+  """
+  checkSmsCode(input: CheckSmsCodeInput!): UserResponse
+
+  """
+  이름 변경
+  """
+  changeName(input: ChangeNameInput!): UserResponse
+
+  """
+  관리자 로그인
+  """
+  adminLogin(input: AdminLoginInput!): AdminAuthPayload
+
+  """
+  관리자 거절
+  """
+  adminReject(input: AdminRejectInput!): MessageResponse
+
+  """
+  인증 단계 업데이트
+  """
+  updateAuthStep(input: UpdateAuthStepInput!): UserResponse
+
+  """
+  유저 메모 작성
+  """
+  updateUserMemo(input: UpdateUserMemoInput!): UserResponse
+
+  """
+  관리자 봇 중지
+  """
+  stopBotByAdmin(id: ID!): UserResponse
+
+  """
+  관리자 쿠폰 지급(인증 4단계인 유저만 지급 가능)
+  """
+  adminTicket(input: AdminTicketInput!): UserResponse
+
+  """
+  Faq 등록
+  """
+  createFaq(input: CreateFaqInput!): Faq!
+
+  """
+  Faq 수정
+  """
+  updateFaq(input: UpdateFaqInput!): Faq!
+
+  """
+  Faq 삭제
+  """
+  deleteFaq(id: ID!): Faq!
+
+  """
+  공지사항 등록
+  """
+  createNotice(input: CreateNoticeInput!): Notice!
+
+  """
+  공지사항 수정
+  """
+  updateNotice(input: UpdateNoticeInput!): Notice!
+
+  """
+  공지사항 삭제
+  """
+  deleteNotice(id: ID!): Notice!
+
+  """
+  유저 내부(입금) 지갑 생성
+  """
+  createUserInternalWallet(input: CreateUserInternalWalletInput!): InternalWalletResponse
+
+  """
+  거래소 API 연결
+  """
+  createBotAccount(input: CreateBotAccountInput!): BotResponse
+
+  """
+  AI 오토봇 시작 & 중지
+  """
+  toggleBot(input: ToggleBotInput!): BotResponse
+
+  """
+  테스트
+  """
+  verifyExchangeKeys(input: VerifyInput!): VerifyResponse
+
+  """
+  코인 받기
+  """
+  receiveCoin(input: ReceiveCoinInput!): CountResponse!
+
+  """
+  티켓 생성
+  """
+  createTicket(input: CreateTicketInput!): Ticket
+
+  """
+  티켓 수정
+  """
+  updateTicket(input: UpdateTicketInput!): Ticket
+
+  """
+  티켓 삭제
+  """
+  deleteTicket(id: ID!): Ticket
+
+  """
+  티켓 구매
+  """
+  buyTicket(id: ID!): MessageResponse
+
+  """
+  파트너 로그인
+  """
+  partnerLogin(input: PartnerLoginInput!): PartnerAuthPayload
+
+  """
+  파트너 등록
+  """
+  createPartner(input: CreatePartnerInput): MessageResponse
+
+  """
+  파트너 수정
+  """
+  updatePartner(input: UpdatePartnerInput): MessageResponse
+
+  """
+  파트너 삭제
+  """
+  deletePartner(id: ID!): MessageResponse
+}
+
+"""
+Faq 다음글
+"""
+type NextFaq {
+  id: ID
+  title: String
+}
+
+"""
+공지사항 다음글
+"""
+type NextNotice {
+  id: ID
+  title: String
+}
+
+"""
+공지사항 정보
+"""
+type Notice {
+  id: ID!
+
+  """
+  언어
+  """
+  locale: LocaleStatus!
+
+  """
+  제목
+  """
+  title: String!
+
+  """
+  내용
+  """
+  content: String!
+
+  """
+  상단 고정 여부
+  """
+  is_fixed: Int
+
+  """
+  공지사항 노출 여부
+  """
+  is_active: Int
+
+  """
+  노출 시작 시간
+  """
+  started_at: DateTime
+
+  """
+  노출 종료 시간
+  """
+  ended_at: DateTime
+
+  """
+  생성 시간
+  """
+  created_at: DateTime
+
+  """
+  수정 시간
+  """
+  updated_at: DateTime
+
+  """
+  이미지
+  """
+  images: [Image]
+
+  """
+  썸네일
+  """
+  thumbnail: Thumbnail
+
+  """
+  생성자
+  """
+  author: Admin!
+
+  """
+  이전 공지사항
+  """
+  previous: PreviousNotice
+
+  """
+  다음 공지사항
+  """
+  next: NextNotice
+}
+
+"""
+공지사항 검색 항목
+"""
+enum NoticeColumn {
+  TITLE
+  CONTENT
+  STARTED_AT
+  ENDED_AT
+}
+
+"""
+A paginated list of Notice items.
+"""
+type NoticePaginator {
+  """
+  Pagination information about the list of items.
+  """
+  paginatorInfo: PaginatorInfo!
+
+  """
+  A list of Notice items.
+  """
+  data: [Notice!]!
+}
+
+input NoticeWhereConditions {
+  """
+  The column that is used for the condition.
+  """
+  column: NoticeColumn
+
+  """
+  The operator that is used for the condition.
+  """
+  operator: SQLOperator = EQ
+
+  """
+  The value that is used for the condition.
+  """
+  value: Mixed
+
+  """
+  A set of conditions that requires all conditions to match.
+  """
+  AND: [NoticeWhereConditions!]
+
+  """
+  A set of conditions that requires at least one condition to match.
+  """
+  OR: [NoticeWhereConditions!]
+}
+
+"""
+Allows ordering a list of records.
+"""
+input OrderByClause {
+  """
+  The column that is used for ordering.
+  """
+  column: String!
+
+  """
+  The direction that is used for ordering.
+  """
+  order: SortOrder!
+}
+
+"""
+Aggregate functions when ordering by a relation without specifying a column.
+"""
+enum OrderByRelationAggregateFunction {
+  """
+  Amount of items.
+  """
+  COUNT
+}
+
+"""
+Aggregate functions when ordering by a relation that may specify a column.
+"""
+enum OrderByRelationWithColumnAggregateFunction {
+  """
+  Average.
+  """
+  AVG
+
+  """
+  Minimum.
+  """
+  MIN
+
+  """
+  Maximum.
+  """
+  MAX
+
+  """
+  Sum.
+  """
+  SUM
+
+  """
+  Amount of items.
+  """
+  COUNT
+}
+
+"""
+Information about pagination using a fully featured paginator.
+"""
+type PaginatorInfo {
+  """
+  Number of items in the current page.
+  """
+  count: Int!
+
+  """
+  Index of the current page.
+  """
+  currentPage: Int!
+
+  """
+  Index of the first item in the current page.
+  """
+  firstItem: Int
+
+  """
+  Are there more pages after this one?
+  """
+  hasMorePages: Boolean!
+
+  """
+  Index of the last item in the current page.
+  """
+  lastItem: Int
+
+  """
+  Index of the last available page.
+  """
+  lastPage: Int!
+
+  """
+  Number of items per page.
+  """
+  perPage: Int!
+
+  """
+  Number of total available items.
+  """
+  total: Int!
+}
+
+type Partner {
+  id: ID!
+
+  """
+  이름
+  """
+  name: String!
+
+  """
+  파트너 수수료
+  """
+  fee: Float
+
+  """
+  메모1
+  """
+  memo1: String
+
+  """
+  메모2
+  """
+  memo2: String
+
+  """
+  역할
+  """
+  role: String
+}
+
+"""
+로그인 정보
+"""
+type PartnerAuthPayload {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  액세스 토큰
+  """
+  access_token: String
+
+  """
+  리프레쉬 토큰
+  """
+  refresh_token: String
+
+  """
+  액세스 토큰 만료 시간
+  """
+  expires_in: String
+
+  """
+  토큰 타입
+  """
+  token_type: String
+
+  """
+  유저 정보
+  """
+  partner: Partner
+}
+
+input PartnerLoginInput {
+  """
+  이름
+  """
+  name: String!
+
+  """
+  비밀번호
+  """
+  password: String!
+}
+
+"""
+A paginated list of Partner items.
+"""
+type PartnerPaginator {
+  """
+  Pagination information about the list of items.
+  """
+  paginatorInfo: PaginatorInfo!
+
+  """
+  A list of Partner items.
+  """
+  data: [Partner!]!
+}
+
+type PartnerResponse {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  데이터
+  """
+  data: Partner
+}
+
+"""
+Faq 이전글
+"""
+type PreviousFaq {
+  id: ID
+  title: String
+}
+
+"""
+공지사항 이전글
+"""
+type PreviousNotice {
+  id: ID
+  title: String
+}
+
+type Query {
+  """
+  내 정보
+  """
+  me: User
+
+  """
+  로그인 중인 유저 정보
+  """
+  currentUser: User
+
+  """
+  로그인 중인 파트너 정보
+  """
+  currentPartner: Partner
+
+  """
+  로그인 중인 어드민 정보
+  """
+  currentAdmin: Admin
+
+  """
+  유저 상세 정보
+  """
+  user(id: ID!): User
+
+  """
+  어드민 상세 정보
+  """
+  admin(id: ID!): Admin
+
+  """
+  유저 통계
+  """
+  UserAmount: UserAmount
+
+  """
+  입출금 통계
+  """
+  UserWalletHistoryAmount(
+    """
+    년(기본은 현재 년도)
+    """
+    year: Int
+
+    """
+    월(기본은 현재 월)
+    """
+    month: Int
+
+    """
+    타입 (1:입금 2:티켓 구매)
+    """
+    type: UserWalletHistoryType
+  ): Float
+
+  """
+  Faq 상세 정보
+  """
+  faq(id: ID!): Faq
+
+  """
+  공지사항 상세 정보
+  """
+  notice(id: ID!): Notice
+
+  """
+  유저 포인트
+  """
+  userPoint: UserPoint
+
+  """
+  유저 내부(입금) 지갑 상세 정보
+  """
+  userInternalWallet(id: ID!): UserInternalWallet
+
+  """
+  유저 내부(입금) 지갑 목록
+  """
+  userInternalWallets: [UserInternalWallet]
+
+  """
+  유저 내부(입금) 지갑 목록 by 어드민
+  """
+  userInternalWalletsByAdmin(user_id: Int!): [UserInternalWallet]
+
+  """
+  마켓 시세
+  """
+  marketPrices: [MarketPrice]
+
+  """
+  티켓 정보
+  """
+  tickets: [Ticket]
+
+  """
+  유저 티켓 정보
+  """
+  userTicket: UserTicket
+
+  """
+  파트너 상세 정보
+  """
+  partner(id: ID!): Partner
+
+  """
+  유저 목록
+  """
+  users(
+    auth_step: AuthStepEnum
+    login_id: String
+    name: String
+    email: String
+    phone: String
+    uid: String
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): UserPaginator!
+
+  """
+  어드민 목록
+  """
+  admins(
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): AdminPaginator!
+
+  """
+  Faq 목록
+  """
+  faqs(
+    locale: LocaleStatus
+    type: FaqTypeEnum
+    is_active: Boolean
+    orderBy: [QueryFaqsOrderByOrderByClause!]
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): FaqPaginator!
+
+  """
+  Faq 검색 목록
+  """
+  faqSearch(
+    locale: LocaleStatus
+    type: FaqTypeEnum
+    is_active: Boolean
+    where: QueryFaqSearchWhereWhereConditions
+    orderBy: [QueryFaqSearchOrderByOrderByClause!]
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): FaqPaginator!
+
+  """
+  공지사항 목록
+  """
+  notices(
+    locale: LocaleStatus
+    is_active: Boolean
+    orderBy: [QueryNoticesOrderByOrderByClause!]
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): NoticePaginator!
+
+  """
+  공지사항 검색 목록
+  """
+  noticeSearch(
+    locale: LocaleStatus
+    is_active: Boolean
+    where: QueryNoticeSearchWhereWhereConditions
+    orderBy: [QueryNoticeSearchOrderByOrderByClause!]
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): NoticePaginator!
+
+  """
+  입출금 내역 by 유저
+  """
+  userWalletHistoryByUser(
+    """
+    년(기본은 현재 년도)
+    """
+    year: Int
+
+    """
+    월(기본은 현재 월)
+    """
+    month: Int
+
+    """
+    타입 (1:입금 2:티켓 구매)
+    """
+    type: UserWalletHistoryType
+
+    """
+    조건 검색
+    """
+    where: QueryUserWalletHistoryByUserWhereWhereConditions
+    orderBy: [QueryUserWalletHistoryByUserOrderByOrderByClause!]
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): UserWalletHistoryPaginator!
+
+  """
+  입출금 내역 by 어드민
+  """
+  userWalletHistoryByAdmin(
+    """
+    년(기본은 현재 년도)
+    """
+    year: Int
+
+    """
+    월(기본은 현재 월)
+    """
+    month: Int
+
+    """
+    타입 (1:입금 2:티켓 구매)
+    """
+    type: UserWalletHistoryType
+
+    """
+    조건 검색
+    """
+    where: QueryUserWalletHistoryByAdminWhereWhereConditions
+    orderBy: [QueryUserWalletHistoryByAdminOrderByOrderByClause!]
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): UserWalletHistoryPaginator!
+
+  """
+  파트너 목록
+  """
+  partners(
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): PartnerPaginator!
+}
+
+"""
+Allowed column names for Query.faqSearch.orderBy.
+"""
+enum QueryFaqSearchOrderByColumn {
+  IS_FIXED
+  CREATED_AT
+}
+
+"""
+Order by clause for Query.faqSearch.orderBy.
+"""
+input QueryFaqSearchOrderByOrderByClause {
+  """
+  The column that is used for ordering.
+  """
+  column: QueryFaqSearchOrderByColumn!
+
+  """
+  The direction that is used for ordering.
+  """
+  order: SortOrder!
+}
+
+"""
+Dynamic WHERE conditions for the `where` argument of the query `faqSearch`.
+"""
+input QueryFaqSearchWhereWhereConditions {
+  """
+  The column that is used for the condition.
+  """
+  column: FaqColumn
+
+  """
+  The operator that is used for the condition.
+  """
+  operator: SQLOperator = EQ
+
+  """
+  The value that is used for the condition.
+  """
+  value: Mixed
+
+  """
+  A set of conditions that requires all conditions to match.
+  """
+  AND: [QueryFaqSearchWhereWhereConditions!]
+
+  """
+  A set of conditions that requires at least one condition to match.
+  """
+  OR: [QueryFaqSearchWhereWhereConditions!]
+
+  """
+  Check whether a relation exists. Extra conditions or a minimum amount can be applied.
+  """
+  HAS: QueryFaqSearchWhereWhereConditionsRelation
+}
+
+"""
+Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `faqSearch`.
+"""
+input QueryFaqSearchWhereWhereConditionsRelation {
+  """
+  The relation that is checked.
+  """
+  relation: String!
+
+  """
+  The comparison operator to test against the amount.
+  """
+  operator: SQLOperator = GTE
+
+  """
+  The amount to test.
+  """
+  amount: Int = 1
+
+  """
+  Additional condition logic.
+  """
+  condition: QueryFaqSearchWhereWhereConditions
+}
+
+"""
+Allowed column names for Query.faqs.orderBy.
+"""
+enum QueryFaqsOrderByColumn {
+  IS_FIXED
+  CREATED_AT
+}
+
+"""
+Order by clause for Query.faqs.orderBy.
+"""
+input QueryFaqsOrderByOrderByClause {
+  """
+  The column that is used for ordering.
+  """
+  column: QueryFaqsOrderByColumn!
+
+  """
+  The direction that is used for ordering.
+  """
+  order: SortOrder!
+}
+
+"""
+Allowed column names for Query.noticeSearch.orderBy.
+"""
+enum QueryNoticeSearchOrderByColumn {
+  IS_FIXED
+  CREATED_AT
+}
+
+"""
+Order by clause for Query.noticeSearch.orderBy.
+"""
+input QueryNoticeSearchOrderByOrderByClause {
+  """
+  The column that is used for ordering.
+  """
+  column: QueryNoticeSearchOrderByColumn!
+
+  """
+  The direction that is used for ordering.
+  """
+  order: SortOrder!
+}
+
+"""
+Dynamic WHERE conditions for the `where` argument of the query `noticeSearch`.
+"""
+input QueryNoticeSearchWhereWhereConditions {
+  """
+  The column that is used for the condition.
+  """
+  column: NoticeColumn
+
+  """
+  The operator that is used for the condition.
+  """
+  operator: SQLOperator = EQ
+
+  """
+  The value that is used for the condition.
+  """
+  value: Mixed
+
+  """
+  A set of conditions that requires all conditions to match.
+  """
+  AND: [QueryNoticeSearchWhereWhereConditions!]
+
+  """
+  A set of conditions that requires at least one condition to match.
+  """
+  OR: [QueryNoticeSearchWhereWhereConditions!]
+
+  """
+  Check whether a relation exists. Extra conditions or a minimum amount can be applied.
+  """
+  HAS: QueryNoticeSearchWhereWhereConditionsRelation
+}
+
+"""
+Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `noticeSearch`.
+"""
+input QueryNoticeSearchWhereWhereConditionsRelation {
+  """
+  The relation that is checked.
+  """
+  relation: String!
+
+  """
+  The comparison operator to test against the amount.
+  """
+  operator: SQLOperator = GTE
+
+  """
+  The amount to test.
+  """
+  amount: Int = 1
+
+  """
+  Additional condition logic.
+  """
+  condition: QueryNoticeSearchWhereWhereConditions
+}
+
+"""
+Allowed column names for Query.notices.orderBy.
+"""
+enum QueryNoticesOrderByColumn {
+  IS_FIXED
+  CREATED_AT
+}
+
+"""
+Order by clause for Query.notices.orderBy.
+"""
+input QueryNoticesOrderByOrderByClause {
+  """
+  The column that is used for ordering.
+  """
+  column: QueryNoticesOrderByColumn!
+
+  """
+  The direction that is used for ordering.
+  """
+  order: SortOrder!
+}
+
+"""
+Allowed column names for Query.userWalletHistoryByAdmin.orderBy.
+"""
+enum QueryUserWalletHistoryByAdminOrderByColumn {
+  ID
+  CREATED_AT
+}
+
+"""
+Order by clause for Query.userWalletHistoryByAdmin.orderBy.
+"""
+input QueryUserWalletHistoryByAdminOrderByOrderByClause {
+  """
+  The column that is used for ordering.
+  """
+  column: QueryUserWalletHistoryByAdminOrderByColumn!
+
+  """
+  The direction that is used for ordering.
+  """
+  order: SortOrder!
+}
+
+"""
+Dynamic WHERE conditions for the `where` argument of the query `userWalletHistoryByAdmin`.
+"""
+input QueryUserWalletHistoryByAdminWhereWhereConditions {
+  """
+  The column that is used for the condition.
+  """
+  column: UserWalletHistoryColumn
+
+  """
+  The operator that is used for the condition.
+  """
+  operator: SQLOperator = EQ
+
+  """
+  The value that is used for the condition.
+  """
+  value: Mixed
+
+  """
+  A set of conditions that requires all conditions to match.
+  """
+  AND: [QueryUserWalletHistoryByAdminWhereWhereConditions!]
+
+  """
+  A set of conditions that requires at least one condition to match.
+  """
+  OR: [QueryUserWalletHistoryByAdminWhereWhereConditions!]
+
+  """
+  Check whether a relation exists. Extra conditions or a minimum amount can be applied.
+  """
+  HAS: QueryUserWalletHistoryByAdminWhereWhereConditionsRelation
+}
+
+"""
+Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `userWalletHistoryByAdmin`.
+"""
+input QueryUserWalletHistoryByAdminWhereWhereConditionsRelation {
+  """
+  The relation that is checked.
+  """
+  relation: String!
+
+  """
+  The comparison operator to test against the amount.
+  """
+  operator: SQLOperator = GTE
+
+  """
+  The amount to test.
+  """
+  amount: Int = 1
+
+  """
+  Additional condition logic.
+  """
+  condition: QueryUserWalletHistoryByAdminWhereWhereConditions
+}
+
+"""
+Allowed column names for Query.userWalletHistoryByUser.orderBy.
+"""
+enum QueryUserWalletHistoryByUserOrderByColumn {
+  ID
+  CREATED_AT
+}
+
+"""
+Order by clause for Query.userWalletHistoryByUser.orderBy.
+"""
+input QueryUserWalletHistoryByUserOrderByOrderByClause {
+  """
+  The column that is used for ordering.
+  """
+  column: QueryUserWalletHistoryByUserOrderByColumn!
+
+  """
+  The direction that is used for ordering.
+  """
+  order: SortOrder!
+}
+
+"""
+Dynamic WHERE conditions for the `where` argument of the query `userWalletHistoryByUser`.
+"""
+input QueryUserWalletHistoryByUserWhereWhereConditions {
+  """
+  The column that is used for the condition.
+  """
+  column: UserWalletHistoryColumn
+
+  """
+  The operator that is used for the condition.
+  """
+  operator: SQLOperator = EQ
+
+  """
+  The value that is used for the condition.
+  """
+  value: Mixed
+
+  """
+  A set of conditions that requires all conditions to match.
+  """
+  AND: [QueryUserWalletHistoryByUserWhereWhereConditions!]
+
+  """
+  A set of conditions that requires at least one condition to match.
+  """
+  OR: [QueryUserWalletHistoryByUserWhereWhereConditions!]
+
+  """
+  Check whether a relation exists. Extra conditions or a minimum amount can be applied.
+  """
+  HAS: QueryUserWalletHistoryByUserWhereWhereConditionsRelation
+}
+
+"""
+Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `userWalletHistoryByUser`.
+"""
+input QueryUserWalletHistoryByUserWhereWhereConditionsRelation {
+  """
+  The relation that is checked.
+  """
+  relation: String!
+
+  """
+  The comparison operator to test against the amount.
+  """
+  operator: SQLOperator = GTE
+
+  """
+  The amount to test.
+  """
+  amount: Int = 1
+
+  """
+  Additional condition logic.
+  """
+  condition: QueryUserWalletHistoryByUserWhereWhereConditions
+}
+
+input ReceiveCoinInput {
+  """
+  코인 아이디
+  """
+  coin_id: CoinTypeEnum!
+
+  """
+  지갑 주소
+  """
+  wallet_address: String!
+}
+
+"""
+리프레시 토큰 정보
+"""
+type RefreshAuthPayload {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  액세스 토큰
+  """
+  access_token: String
+
+  """
+  액세스 토큰 만료 시간
+  """
+  expires_in: String
+
+  """
+  토큰 타입
+  """
+  token_type: String
+}
+
+"""
+유저 등록 Input
+"""
+input RegisterInput {
+  """
+  로그인 아이디
+  """
+  login_id: String!
+
+  """
+  이름
+  """
+  name: String!
+
+  """
+  이메일
+  """
+  email: String!
+
+  """
+  비밀번호
+  """
+  password: String!
+
+  """
+  국번
+  """
+  country_code: String
+
+  """
+  휴대폰 번호
+  """
+  phone_number: String
+
+  """
+  언어
+  """
+  locale: String
+
+  """
+  추천인 코드
+  """
+  invite_code: String
+}
+
+"""
+패스워드 재설정 input
+"""
+input ResetPasswordInput {
+  """
+  이메일
+  """
+  email: String!
+
+  """
+  토큰
+  """
+  token: String!
+
+  """
+  새 비밀번호
+  """
+  password: String!
+
+  """
+  새 비밀번호 확인
+  """
+  password_confirmation: String!
+}
+
+enum RoleEnum {
+  """
+  어드민
+  """
+  ADMIN
+
+  """
+  유저
+  """
+  USER
+}
+
+"""
+문자 인증 코드 보내기 Input
+"""
+input SendSmsCodeInput {
+  """
+  국번
+  """
+  country_code: String!
+
+  """
+  휴대폰 번호
+  """
+  phone_number: String!
+}
+
+"""
+SMS 메시지
+"""
+type SmsMessage {
+  """
+  국번
+  """
+  country_code: String
+
+  """
+  휴대폰 번호
+  """
+  phone_number: String
+
+  """
+  문자 코드
+  """
+  sms_code: String
+
+  """
+  문자 코드 만료 시간
+  """
+  sms_code_expired_at: DateTime
+
+  """
+  요청
+  """
+  request: String
+
+  """
+  응답
+  """
+  response: String
+}
+
+"""
+Directions for ordering a list of records.
+"""
+enum SortOrder {
+  """
+  Sort records in ascending order.
+  """
+  ASC
+
+  """
+  Sort records in descending order.
+  """
+  DESC
+}
+
+"""
+The available SQL operators that are used to filter query results.
+"""
+enum SQLOperator {
+  """
+  Equal operator (`=`)
+  """
+  EQ
+
+  """
+  Not equal operator (`!=`)
+  """
+  NEQ
+
+  """
+  Greater than operator (`>`)
+  """
+  GT
+
+  """
+  Greater than or equal operator (`>=`)
+  """
+  GTE
+
+  """
+  Less than operator (`<`)
+  """
+  LT
+
+  """
+  Less than or equal operator (`<=`)
+  """
+  LTE
+
+  """
+  Simple pattern matching (`LIKE`)
+  """
+  LIKE
+
+  """
+  Negation of simple pattern matching (`NOT LIKE`)
+  """
+  NOT_LIKE
+
+  """
+  Whether a value is within a set of values (`IN`)
+  """
+  IN
+
+  """
+  Whether a value is not within a set of values (`NOT IN`)
+  """
+  NOT_IN
+
+  """
+  Whether a value is within a range of values (`BETWEEN`)
+  """
+  BETWEEN
+
+  """
+  Whether a value is not within a range of values (`NOT BETWEEN`)
+  """
+  NOT_BETWEEN
+
+  """
+  Whether a value is null (`IS NULL`)
+  """
+  IS_NULL
+
+  """
+  Whether a value is not null (`IS NOT NULL`)
+  """
+  IS_NOT_NULL
+}
+
+"""
+심볼
+"""
+enum SymbolEnum {
+  XRP
+  ETH
+}
+
+type Thumbnail {
+  id: ID!
+  url: String
+}
+
+"""
+티켓 정보
+"""
+type Ticket {
+  id: ID!
+
+  """
+  이름
+  """
+  name: String
+
+  """
+  일 수
+  """
+  days: Int
+
+  """
+  보너스 일 수
+  """
+  bonus_days: Int
+
+  """
+  가격
+  """
+  price: Float
+}
+
+"""
+AI 오토봇 시작 & 중지 Input
+"""
+input ToggleBotInput {
+  """
+  심볼
+  """
+  symbol: SymbolEnum!
+
+  """
+  활성화 여부
+  """
+  is_active: Boolean!
+
+  """
+  사이즈
+  """
+  base_qty: Float
+
+  """
+  레버리지
+  """
+  leverage: Float
+}
+
+"""
+Specify if you want to include or exclude trashed results from a query.
+"""
+enum Trashed {
+  """
+  Only return trashed results.
+  """
+  ONLY
+
+  """
+  Return both trashed and non-trashed results.
+  """
+  WITH
+
+  """
+  Only return non-trashed results.
+  """
+  WITHOUT
+}
+
+"""
+인증 단계 업데이트 Input
+"""
+input UpdateAuthStepInput {
+  id: ID!
+
+  """
+  인증 단계
+  """
+  auth_step: AuthStepEnum!
+
+  """
+  거래소 UID (마에피이지에서 수정할 때만 입력)
+  """
+  uid: String
+}
+
+"""
+Faq 수정 input
+"""
+input UpdateFaqInput {
+  id: ID!
+
+  """
+  언어
+  """
+  locale: LocaleStatus
+
+  """
+  타입 (1: 지갑 관련, 2: 서비스 관련)
+  """
+  type: FaqTypeEnum!
+
+  """
+  제목
+  """
+  title: String
+
+  """
+  내용
+  """
+  content: String
+
+  """
+  상단 고정 여부
+  """
+  is_fixed: Int
+
+  """
+  Faq 노출 여부
+  """
+  is_active: Int
+
+  """
+  노출 시작일
+  """
+  started_at: DateTime
+
+  """
+  노출 종료일
+  """
+  ended_at: DateTime
+
+  """
+  업로드된 이미지 아이디 배열
+  """
+  images: [Int!]
+
+  """
+  업로드된 썸네일 아이디
+  """
+  thumbnail: Int
+
+  """
+  삭제할 이미지 아이디 배열
+  """
+  deleteImages: [Int!]
+
+  """
+  삭제할 썸네일 아이디
+  """
+  deleteThumbnail: Int
+}
+
+"""
+언어 설정 수정 input
+"""
+input UpdateLocaleInput {
+  """
+  언어
+  """
+  locale: LocaleStatus!
+}
+
+"""
+공지사항 수정 input
+"""
+input UpdateNoticeInput {
+  id: ID!
+
+  """
+  언어
+  """
+  locale: LocaleStatus
+
+  """
+  제목
+  """
+  title: String
+
+  """
+  내용
+  """
+  content: String
+
+  """
+  상단 고정 여부
+  """
+  is_fixed: Int
+
+  """
+  공지사항 노출 여부
+  """
+  is_active: Int
+
+  """
+  노출 시작일
+  """
+  started_at: DateTime
+
+  """
+  노출 종료일
+  """
+  ended_at: DateTime
+
+  """
+  업로드된 이미지 아이디 배열
+  """
+  images: [Int!]
+
+  """
+  업로드된 썸네일 아이디
+  """
+  thumbnail: Int
+
+  """
+  삭제할 이미지 아이디 배열
+  """
+  deleteImages: [Int!]
+
+  """
+  삭제할 썸네일 아이디
+  """
+  deleteThumbnail: Int
+}
+
+input UpdatePartnerInput {
+  id: ID!
+
+  """
+  비밀번호
+  """
+  password: String
+
+  """
+  수수료
+  """
+  fee: Float
+
+  """
+  메모1
+  """
+  memo1: String
+
+  """
+  메모2
+  """
+  memo2: String
+}
+
+"""
+파트너 메모 작성 Input
+"""
+input UpdatePartnerMemoInput {
+  """
+  partners.id
+  """
+  id: ID!
+
+  """
+  메모1
+  """
+  memo1: String
+
+  """
+  메모2
+  """
+  memo2: String
+}
+
+"""
+티켓 수정 Input
+"""
+input UpdateTicketInput {
+  id: ID!
+
+  """
+  이름
+  """
+  name: String
+
+  """
+  일 수
+  """
+  days: Int
+
+  """
+  보너스 일 수
+  """
+  bonus_days: Int
+
+  """
+  가격
+  """
+  price: Float
+}
+
+"""
+유저 메모 작성 Input
+"""
+input UpdateUserMemoInput {
+  """
+  users.id
+  """
+  id: ID!
+
+  """
+  메모
+  """
+  memo: String
+}
+
+"""
+Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec
+"""
+scalar Upload
+
+type User {
+  id: ID!
+
+  """
+  아이디
+  """
+  login_id: String
+
+  """
+  이름
+  """
+  name: String
+
+  """
+  이메일
+  """
+  email: String
+
+  """
+  인증 단계
+  """
+  auth_step: AuthStepEnum
+
+  """
+  국번
+  """
+  country_code: String
+
+  """
+  휴대폰 번호
+  """
+  phone_number: String
+
+  """
+  거래소 UID
+  """
+  uid: String
+
+  """
+  언어
+  """
+  locale: String
+
+  """
+  포인트
+  """
+  point: Float
+
+  """
+  추천인 코드
+  """
+  invite_code: String
+
+  """
+  메모
+  """
+  memo: String
+
+  """
+  등록일
+  """
+  created_at: DateTime!
+
+  """
+  수정일
+  """
+  updated_at: DateTime!
+
+  """
+  봇 정보
+  """
+  botAccounts: [BotAccount]
+
+  """
+  티켓 정보
+  """
+  userTicket: UserTicket
+
+  """
+  역할
+  """
+  role: String
+}
+
+"""
+봇 계정 정보 히스토리
+"""
+type UserAccountHistory {
+  id: ID!
+
+  """
+  유저 아이디
+  """
+  user_id: Int
+
+  """
+  데이터
+  """
+  data: String
+
+  """
+  등록일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+}
+
+type UserAmount {
+  """
+  승인 완료 수
+  """
+  completed_count: Int
+
+  """
+  승인 대기 수
+  """
+  pending_count: Int
+
+  """
+  승인 거절 수
+  """
+  reject_count: Int
+
+  """
+  유저 수
+  """
+  user_count: Int
+}
+
+"""
+유저 내부(입금) 지갑 정보
+"""
+type UserInternalWallet {
+  id: ID!
+
+  """
+  유저 아이디
+  """
+  user_id: Int
+
+  """
+  코인 아이디
+  """
+  coin_id: CoinTypeEnum
+
+  """
+  지갑 주소
+  """
+  wallet_address: String
+
+  """
+  프라이빗 키
+  """
+  private_key: String
+
+  """
+  마지막 입금일
+  """
+  last_received_at: DateTime
+
+  """
+  등록일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+}
+
+"""
+A paginated list of User items.
+"""
+type UserPaginator {
+  """
+  Pagination information about the list of items.
+  """
+  paginatorInfo: PaginatorInfo!
+
+  """
+  A list of User items.
+  """
+  data: [User!]!
+}
+
+"""
+유저 포인트 정보
+"""
+type UserPoint {
+  id: ID!
+
+  """
+  유저 아이디
+  """
+  user_id: Int
+
+  """
+  포인트
+  """
+  point: Float
+}
+
+type UserResponse {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  유저 정보
+  """
+  data: User
+}
+
+"""
+유저 티켓 정보
+"""
+type UserTicket {
+  id: ID!
+
+  """
+  유저 아이디
+  """
+  user_id: Int
+
+  """
+  무료 티켓 지급 여부
+  """
+  is_free_ticket: Boolean
+
+  """
+  티켓 보유 여부
+  """
+  is_ticket: Boolean
+
+  """
+  티켓 시작일
+  """
+  start_date: DateTime
+
+  """
+  티켓 종료일
+  """
+  end_date: DateTime
+}
+
+"""
+유저 지갑 히스토리
+"""
+type UserWalletHistory {
+  id: ID!
+
+  """
+  유저 아이디
+  """
+  user_id: Int
+
+  """
+  이메일
+  """
+  email: String
+
+  """
+  타입 (1:입금 2:티켓 구매)
+  """
+  type: UserWalletHistoryType
+
+  """
+  제목
+  """
+  title: String
+
+  """
+  내용
+  """
+  content: String
+
+  """
+  이미지 경로
+  """
+  image: String
+
+  """
+  보내는 지갑 주소
+  """
+  from_address: String
+
+  """
+  받는 지갑 주소
+  """
+  to_address: String
+
+  """
+  트랜잭션 아이디
+  """
+  tx_id: String
+
+  """
+  코인 아이디
+  """
+  coin_id: CoinTypeEnum
+
+  """
+  수량
+  """
+  amount: Float
+
+  """
+  출금 수수료
+  """
+  withdraw_fee: Float
+
+  """
+  상태 값
+  """
+  status: UserWalletHistoryStatusEnum
+
+  """
+  등록일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+}
+
+"""
+조건 검색
+"""
+enum UserWalletHistoryColumn {
+  """
+  내용
+  """
+  CONTENT
+
+  """
+  수량
+  """
+  AMOUNT
+}
+
+"""
+A paginated list of UserWalletHistory items.
+"""
+type UserWalletHistoryPaginator {
+  """
+  Pagination information about the list of items.
+  """
+  paginatorInfo: PaginatorInfo!
+
+  """
+  A list of UserWalletHistory items.
+  """
+  data: [UserWalletHistory!]!
+}
+
+enum UserWalletHistoryReviewEnum {
+  """
+  완료
+  """
+  COMPLETED
+
+  """
+  취소
+  """
+  CANCELED
+}
+
+"""
+유저 지갑 상태
+"""
+enum UserWalletHistoryStatusEnum {
+  """
+  대기
+  """
+  PENDING
+
+  """
+  완료
+  """
+  COMPLETED
+
+  """
+  취소
+  """
+  CANCELED
+}
+
+"""
+유저 지갑 히스토리 타입
+"""
+enum UserWalletHistoryType {
+  """
+  전체
+  """
+  ALL
+
+  """
+  입금
+  """
+  PLUS
+
+  """
+  티켓 구매
+  """
+  MINUS
+}
+
+"""
+회원가입 이메일 인증 input
+"""
+input VerifyEmailInput {
+  """
+  인증 토큰
+  """
+  token: String!
+}
+
+input VerifyInput {
+  """
+  API 키
+  """
+  api_key: String!
+
+  """
+  시크릿 키
+  """
+  secret_key: String!
+}
+
+type VerifyResponse {
+  ok: Boolean!
+  httpStatus: Int!
+  body: String!
+  uid: String
+  balance: String
+}
+
+"""
+Dynamic WHERE conditions for queries.
+"""
+input WhereConditions {
+  """
+  The column that is used for the condition.
+  """
+  column: String
+
+  """
+  The operator that is used for the condition.
+  """
+  operator: SQLOperator = EQ
+
+  """
+  The value that is used for the condition.
+  """
+  value: Mixed
+
+  """
+  A set of conditions that requires all conditions to match.
+  """
+  AND: [WhereConditions!]
+
+  """
+  A set of conditions that requires at least one condition to match.
+  """
+  OR: [WhereConditions!]
+
+  """
+  Check whether a relation exists. Extra conditions or a minimum amount can be applied.
+  """
+  HAS: WhereConditionsRelation
+}
+
+"""
+Dynamic HAS conditions for WHERE condition queries.
+"""
+input WhereConditionsRelation {
+  """
+  The relation that is checked.
+  """
+  relation: String!
+
+  """
+  The comparison operator to test against the amount.
+  """
+  operator: SQLOperator = GTE
+
+  """
+  The amount to test.
+  """
+  amount: Int = 1
+
+  """
+  Additional condition logic.
+  """
+  condition: WhereConditions
+}

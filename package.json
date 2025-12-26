@@ -7,8 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "codegen": "graphql-codegen --config codegen.config.ts",
-    "u": "npx get-graphql-schema https://dev-api.x-zenith.com/graphql > src/graphql/schema.graphql"
+    "graphql-schema": "node scripts/graphql-schema.js",
+    "graphql-operations": "node scripts/graphql-operations.js",
+    "graphql-fragments": "node scripts/graphql-fragments.js",
+    "graphql-replace": "node scripts/graphql-replace.js",
+    "generate": "graphql-codegen --config codegen.config.ts",
+    "codegen": "yarn graphql-schema && yarn graphql-operations && yarn graphql-fragments && yarn generate"
   },
   "dependencies": {
     "@apollo/client": "^4.0.11",

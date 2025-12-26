@@ -1,0 +1,29 @@
+@charset "UTF-8";
+/* 언어별 설정 */
+:root {
+  --font-fallback: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+[lang=ko] body {
+  --main-font: var(--font-pretendard), var(--font-fallback);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+[lang=en] body {
+  --main-font: var(--font-poppins), var(--font-fallback);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+[lang=zh] body {
+  font-family: var(--font-noto-sc), var(--font-fallback);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+[lang=ru] body {
+  font-family: var(--font-noto), var(--font-fallback);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}/*# sourceMappingURL=locale.css.map */
