@@ -10,9 +10,9 @@
     "graphql-schema": "node scripts/graphql-schema.js",
     "graphql-operations": "node scripts/graphql-operations.js",
     "graphql-fragments": "node scripts/graphql-fragments.js",
-    "graphql-replace": "node scripts/graphql-replace.js",
-    "generate": "graphql-codegen --config codegen.config.ts",
-    "codegen": "yarn graphql-schema && yarn graphql-operations && yarn graphql-fragments && yarn generate"
+    "graphql-combine": "node scripts/graphql-combine.js",
+    "generate": "yarn graphql-schema && yarn graphql-operations && yarn graphql-fragments && yarn graphql-combine",
+    "codegen": "graphql-codegen --config codegen.config.ts"
   },
   "dependencies": {
     "@apollo/client": "^4.0.11",

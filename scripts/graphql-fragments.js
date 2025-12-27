@@ -16,8 +16,8 @@ const maxDepth = Number("4");
 // 이름에 포함된 경우 생성 제외
 const excludeNameKeywords = [];
 // 각 그룹의 필드가 모두 존재하면 제외
-const excludeWrapperFieldNameGroups = [["data", "paginatorInfo"], ["ddd"]];
-// 중첩 객체 생성 여부
+const excludeWrapperFieldNameGroups = [["data", "paginatorInfo"], ["sample"]];
+// 중첩 객체 생성 여부 (graphql-replace 옵션과 맞춰줘야함)
 const includeCompositeFragments = false;
 
 const schemaPath = path.join(process.cwd(), "src/graphql/schema.graphql");
@@ -95,12 +95,11 @@ const buildSelectionDeep = (type, depth, visited, indentLevel, maxDepthForFragme
         }
 
         if (isObjectType(fieldType)) {
-          const fragmentName = toFragmentName(fieldType.name);
-          if (!availableFragments.has(fieldType.name)) {
-            acc.lines.push(`${indent(indentLevel)}${field.name}`);
+          if (!includeCompositeFragments) {
             return acc;
           }
-          if (!includeCompositeFragments) {
+          const fragmentName = toFragmentName(fieldType.name);
+          if (!availableFragments.has(fieldType.name)) {
             acc.lines.push(`${indent(indentLevel)}${field.name}`);
             return acc;
           }
@@ -113,6 +112,9 @@ const buildSelectionDeep = (type, depth, visited, indentLevel, maxDepthForFragme
         }
 
         if (isInterfaceType(fieldType) || isUnionType(fieldType)) {
+          if (!includeCompositeFragments) {
+            return acc;
+          }
           const nested = buildSelection(
             fieldType,
             depth + 1,
@@ -159,9 +161,6 @@ const shouldSkipType = (type) => {
       group.every((name) => skipNames.has(name) && fieldNames.includes(name)),
     );
   if (fieldNames.length > 0 && hasAllWrapperFields) {
-    return true;
-  }
-  if (!includeCompositeFragments && hasNonScalarField(type)) {
     return true;
   }
   return shouldExcludeName(type.name);

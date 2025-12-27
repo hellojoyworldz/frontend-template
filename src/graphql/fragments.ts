@@ -1,5 +1,3 @@
-// Auto-generated. Do not edit.
-// Depth: 4
 import { gql } from "@apollo/client";
 
 export const AdminFragment = gql`

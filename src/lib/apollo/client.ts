@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloLink, InMemoryCache } from "@apollo/client";
-import errorLink from "./errorLink";
 import authLink from "./authLink";
+import errorLink from "./errorLink";
 import httpLink from "./httpLink";
 
 const client = new ApolloClient({

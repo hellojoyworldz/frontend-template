@@ -13,7 +13,7 @@ const {
 
 // Object Depth
 const maxDepth = Number("4");
-// 이름에 포함된 경우 제외할 키워드 (대소문자 무시)
+// 이름에 포함된 경우 생성 제외 (대소문자 무시)
 const excludeNameKeywords = ["admin", "partner"];
 
 const schemaPath = path.join(process.cwd(), "src/graphql/schema.graphql");
@@ -73,10 +73,14 @@ const buildSelectionDeep = (type, depth, visited) => {
     const nextVisited = new Set(visited);
     nextVisited.add(typeName);
 
-    return Object.values(type.getFields()).map((field) => {
+    const scalarLines = [];
+    const nestedLines = [];
+
+    Object.values(type.getFields()).forEach((field) => {
       const fieldType = unwrapType(field.type);
       if (isScalarOrEnum(fieldType)) {
-        return field.name;
+        scalarLines.push(field.name);
+        return;
       }
 
       if (isObjectType(fieldType) || isInterfaceType(fieldType) || isUnionType(fieldType)) {
@@ -84,13 +88,18 @@ const buildSelectionDeep = (type, depth, visited) => {
         const nested = buildSelection(fieldType, nextDepth, nextVisited);
         const typeLabel = fieldType.name ?? "Unknown";
         const space = `  `.repeat(nextDepth);
-        return nested.length
-          ? `${field.name} {\n    ${space}# ${typeLabel}\n    ${space}${nested.join(`\n    ${space}`)}\n  ${space}}`
-          : field.name;
+        nestedLines.push(
+          nested.length
+            ? `${field.name} {\n    ${space}# ${typeLabel}\n    ${space}${nested.join(`\n    ${space}`)}\n  ${space}}`
+            : field.name,
+        );
+        return;
       }
 
-      return field.name;
+      scalarLines.push(field.name);
     });
+
+    return [...scalarLines, ...nestedLines];
   }
 
   if (isInterfaceType(type) || isUnionType(type)) {
@@ -116,7 +125,8 @@ const buildOperation = (opType, fieldName, field) => {
 
   const returnType = unwrapType(field.type);
   const selection = buildSelection(returnType, 0, new Set());
-  const selectionBlock = selection.length ? ` {\n    ${selection.join("\n    ")}\n  }` : "";
+  const typeLabel = returnType?.name ?? "Unknown";
+  const selectionBlock = selection.length ? ` {\n    # ${typeLabel}\n    ${selection.join("\n    ")}\n  }` : "";
 
   const opName = `${fieldName}`;
 

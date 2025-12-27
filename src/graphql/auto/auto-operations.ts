@@ -5,6 +5,7 @@ import { gql } from "@apollo/client";
 export const ME = gql`
   query me {
     me {
+      # User
       id
       login_id
       name
@@ -19,6 +20,7 @@ export const ME = gql`
       memo
       created_at
       updated_at
+      role
       botAccounts {
         # BotAccount
         id
@@ -45,7 +47,6 @@ export const ME = gql`
         start_date
         end_date
       }
-      role
     }
   }
 `;
@@ -53,6 +54,7 @@ export const ME = gql`
 export const CURRENT_USER = gql`
   query currentUser {
     currentUser {
+      # User
       id
       login_id
       name
@@ -67,6 +69,7 @@ export const CURRENT_USER = gql`
       memo
       created_at
       updated_at
+      role
       botAccounts {
         # BotAccount
         id
@@ -93,7 +96,6 @@ export const CURRENT_USER = gql`
         start_date
         end_date
       }
-      role
     }
   }
 `;
@@ -101,6 +103,7 @@ export const CURRENT_USER = gql`
 export const USER = gql`
   query user($id: ID!) {
     user(id: $id) {
+      # User
       id
       login_id
       name
@@ -115,6 +118,7 @@ export const USER = gql`
       memo
       created_at
       updated_at
+      role
       botAccounts {
         # BotAccount
         id
@@ -141,7 +145,6 @@ export const USER = gql`
         start_date
         end_date
       }
-      role
     }
   }
 `;
@@ -149,6 +152,7 @@ export const USER = gql`
 export const USER_AMOUNT = gql`
   query UserAmount {
     UserAmount {
+      # UserAmount
       completed_count
       pending_count
       reject_count
@@ -166,6 +170,7 @@ export const USER_WALLET_HISTORY_AMOUNT = gql`
 export const FAQ = gql`
   query faq($id: ID!) {
     faq(id: $id) {
+      # Faq
       id
       locale
       type
@@ -213,6 +218,7 @@ export const FAQ = gql`
 export const NOTICE = gql`
   query notice($id: ID!) {
     notice(id: $id) {
+      # Notice
       id
       locale
       title
@@ -259,6 +265,7 @@ export const NOTICE = gql`
 export const USER_POINT = gql`
   query userPoint {
     userPoint {
+      # UserPoint
       id
       user_id
       point
@@ -269,6 +276,7 @@ export const USER_POINT = gql`
 export const USER_INTERNAL_WALLET = gql`
   query userInternalWallet($id: ID!) {
     userInternalWallet(id: $id) {
+      # UserInternalWallet
       id
       user_id
       coin_id
@@ -284,6 +292,7 @@ export const USER_INTERNAL_WALLET = gql`
 export const USER_INTERNAL_WALLETS = gql`
   query userInternalWallets {
     userInternalWallets {
+      # UserInternalWallet
       id
       user_id
       coin_id
@@ -299,6 +308,7 @@ export const USER_INTERNAL_WALLETS = gql`
 export const MARKET_PRICES = gql`
   query marketPrices {
     marketPrices {
+      # MarketPrice
       id
       name
       endpoint
@@ -313,6 +323,7 @@ export const MARKET_PRICES = gql`
 export const TICKETS = gql`
   query tickets {
     tickets {
+      # Ticket
       id
       name
       days
@@ -325,6 +336,7 @@ export const TICKETS = gql`
 export const USER_TICKET = gql`
   query userTicket {
     userTicket {
+      # UserTicket
       id
       user_id
       is_free_ticket
@@ -336,26 +348,9 @@ export const USER_TICKET = gql`
 `;
 
 export const USERS = gql`
-  query users(
-    $auth_step: AuthStepEnum
-    $login_id: String
-    $name: String
-    $email: String
-    $phone: String
-    $uid: String
-    $first: Int!
-    $page: Int
-  ) {
-    users(
-      auth_step: $auth_step
-      login_id: $login_id
-      name: $name
-      email: $email
-      phone: $phone
-      uid: $uid
-      first: $first
-      page: $page
-    ) {
+  query users($auth_step: AuthStepEnum, $login_id: String, $name: String, $email: String, $phone: String, $uid: String, $first: Int!, $page: Int) {
+    users(auth_step: $auth_step, login_id: $login_id, name: $name, email: $email, phone: $phone, uid: $uid, first: $first, page: $page) {
+      # UserPaginator
       paginatorInfo {
         # PaginatorInfo
         count
@@ -383,6 +378,7 @@ export const USERS = gql`
         memo
         created_at
         updated_at
+        role
         botAccounts {
           # BotAccount
           id
@@ -409,22 +405,15 @@ export const USERS = gql`
           start_date
           end_date
         }
-        role
       }
     }
   }
 `;
 
 export const FAQS = gql`
-  query faqs(
-    $locale: LocaleStatus
-    $type: FaqTypeEnum
-    $is_active: Boolean
-    $orderBy: [QueryFaqsOrderByOrderByClause!]
-    $first: Int!
-    $page: Int
-  ) {
+  query faqs($locale: LocaleStatus, $type: FaqTypeEnum, $is_active: Boolean, $orderBy: [QueryFaqsOrderByOrderByClause!], $first: Int!, $page: Int) {
     faqs(locale: $locale, type: $type, is_active: $is_active, orderBy: $orderBy, first: $first, page: $page) {
+      # FaqPaginator
       paginatorInfo {
         # PaginatorInfo
         count
@@ -484,24 +473,9 @@ export const FAQS = gql`
 `;
 
 export const FAQ_SEARCH = gql`
-  query faqSearch(
-    $locale: LocaleStatus
-    $type: FaqTypeEnum
-    $is_active: Boolean
-    $where: QueryFaqSearchWhereWhereConditions
-    $orderBy: [QueryFaqSearchOrderByOrderByClause!]
-    $first: Int!
-    $page: Int
-  ) {
-    faqSearch(
-      locale: $locale
-      type: $type
-      is_active: $is_active
-      where: $where
-      orderBy: $orderBy
-      first: $first
-      page: $page
-    ) {
+  query faqSearch($locale: LocaleStatus, $type: FaqTypeEnum, $is_active: Boolean, $where: QueryFaqSearchWhereWhereConditions, $orderBy: [QueryFaqSearchOrderByOrderByClause!], $first: Int!, $page: Int) {
+    faqSearch(locale: $locale, type: $type, is_active: $is_active, where: $where, orderBy: $orderBy, first: $first, page: $page) {
+      # FaqPaginator
       paginatorInfo {
         # PaginatorInfo
         count
@@ -561,14 +535,9 @@ export const FAQ_SEARCH = gql`
 `;
 
 export const NOTICES = gql`
-  query notices(
-    $locale: LocaleStatus
-    $is_active: Boolean
-    $orderBy: [QueryNoticesOrderByOrderByClause!]
-    $first: Int!
-    $page: Int
-  ) {
+  query notices($locale: LocaleStatus, $is_active: Boolean, $orderBy: [QueryNoticesOrderByOrderByClause!], $first: Int!, $page: Int) {
     notices(locale: $locale, is_active: $is_active, orderBy: $orderBy, first: $first, page: $page) {
+      # NoticePaginator
       paginatorInfo {
         # PaginatorInfo
         count
@@ -627,15 +596,9 @@ export const NOTICES = gql`
 `;
 
 export const NOTICE_SEARCH = gql`
-  query noticeSearch(
-    $locale: LocaleStatus
-    $is_active: Boolean
-    $where: QueryNoticeSearchWhereWhereConditions
-    $orderBy: [QueryNoticeSearchOrderByOrderByClause!]
-    $first: Int!
-    $page: Int
-  ) {
+  query noticeSearch($locale: LocaleStatus, $is_active: Boolean, $where: QueryNoticeSearchWhereWhereConditions, $orderBy: [QueryNoticeSearchOrderByOrderByClause!], $first: Int!, $page: Int) {
     noticeSearch(locale: $locale, is_active: $is_active, where: $where, orderBy: $orderBy, first: $first, page: $page) {
+      # NoticePaginator
       paginatorInfo {
         # PaginatorInfo
         count
@@ -694,24 +657,9 @@ export const NOTICE_SEARCH = gql`
 `;
 
 export const USER_WALLET_HISTORY_BY_USER = gql`
-  query userWalletHistoryByUser(
-    $year: Int
-    $month: Int
-    $type: UserWalletHistoryType
-    $where: QueryUserWalletHistoryByUserWhereWhereConditions
-    $orderBy: [QueryUserWalletHistoryByUserOrderByOrderByClause!]
-    $first: Int!
-    $page: Int
-  ) {
-    userWalletHistoryByUser(
-      year: $year
-      month: $month
-      type: $type
-      where: $where
-      orderBy: $orderBy
-      first: $first
-      page: $page
-    ) {
+  query userWalletHistoryByUser($year: Int, $month: Int, $type: UserWalletHistoryType, $where: QueryUserWalletHistoryByUserWhereWhereConditions, $orderBy: [QueryUserWalletHistoryByUserOrderByOrderByClause!], $first: Int!, $page: Int) {
+    userWalletHistoryByUser(year: $year, month: $month, type: $type, where: $where, orderBy: $orderBy, first: $first, page: $page) {
+      # UserWalletHistoryPaginator
       paginatorInfo {
         # PaginatorInfo
         count
@@ -749,6 +697,7 @@ export const USER_WALLET_HISTORY_BY_USER = gql`
 export const UPLOAD = gql`
   mutation upload($file: Upload!) {
     upload(file: $file) {
+      # Image
       id
       url
       thumb_small_url
@@ -761,6 +710,7 @@ export const UPLOAD = gql`
 export const UPLOAD_THUMBNAIL = gql`
   mutation uploadThumbnail($file: Upload!) {
     uploadThumbnail(file: $file) {
+      # Thumbnail
       id
       url
     }
@@ -770,6 +720,7 @@ export const UPLOAD_THUMBNAIL = gql`
 export const LOGIN = gql`
   mutation login($input: LoginInput!) {
     login(input: $input) {
+      # LoginAuthPayload
       status
       message
       access_token
@@ -792,6 +743,7 @@ export const LOGIN = gql`
         memo
         created_at
         updated_at
+        role
         botAccounts {
           # BotAccount
           id
@@ -818,7 +770,6 @@ export const LOGIN = gql`
           start_date
           end_date
         }
-        role
       }
     }
   }
@@ -827,6 +778,7 @@ export const LOGIN = gql`
 export const REGISTER = gql`
   mutation register($input: RegisterInput!) {
     register(input: $input) {
+      # MessageResponse
       status
       message
     }
@@ -836,6 +788,7 @@ export const REGISTER = gql`
 export const REFRESH_TOKEN = gql`
   mutation refreshToken($refresh_token: String!) {
     refreshToken(refresh_token: $refresh_token) {
+      # RefreshAuthPayload
       status
       message
       access_token
@@ -848,6 +801,7 @@ export const REFRESH_TOKEN = gql`
 export const LOGOUT_USER = gql`
   mutation logoutUser {
     logoutUser {
+      # LoginAuthPayload
       status
       message
       access_token
@@ -870,6 +824,7 @@ export const LOGOUT_USER = gql`
         memo
         created_at
         updated_at
+        role
         botAccounts {
           # BotAccount
           id
@@ -896,7 +851,6 @@ export const LOGOUT_USER = gql`
           start_date
           end_date
         }
-        role
       }
     }
   }
@@ -905,6 +859,7 @@ export const LOGOUT_USER = gql`
 export const DELETE_USER = gql`
   mutation deleteUser {
     deleteUser {
+      # UserResponse
       status
       message
       data {
@@ -923,6 +878,7 @@ export const DELETE_USER = gql`
         memo
         created_at
         updated_at
+        role
         botAccounts {
           # BotAccount
           id
@@ -949,7 +905,6 @@ export const DELETE_USER = gql`
           start_date
           end_date
         }
-        role
       }
     }
   }
@@ -958,6 +913,7 @@ export const DELETE_USER = gql`
 export const VERIFY_EMAIL = gql`
   mutation verifyEmail($input: VerifyEmailInput!) {
     verifyEmail(input: $input) {
+      # MessageResponse
       status
       message
     }
@@ -967,6 +923,7 @@ export const VERIFY_EMAIL = gql`
 export const CHECK_EMAIL_FOR_CREATE_USER = gql`
   mutation checkEmailForCreateUser($email: String!, $locale: LocaleStatus!) {
     checkEmailForCreateUser(email: $email, locale: $locale) {
+      # MessageResponse
       status
       message
     }
@@ -976,6 +933,7 @@ export const CHECK_EMAIL_FOR_CREATE_USER = gql`
 export const RESEND_VERIFY_EMAIL = gql`
   mutation resendVerifyEmail($input: ForgotPasswordInput!) {
     resendVerifyEmail(input: $input) {
+      # MessageResponse
       status
       message
     }
@@ -985,6 +943,7 @@ export const RESEND_VERIFY_EMAIL = gql`
 export const CHANGE_PASSWORD = gql`
   mutation changePassword($input: ChangePasswordInput) {
     changePassword(input: $input) {
+      # UserResponse
       status
       message
       data {
@@ -1003,6 +962,7 @@ export const CHANGE_PASSWORD = gql`
         memo
         created_at
         updated_at
+        role
         botAccounts {
           # BotAccount
           id
@@ -1029,7 +989,6 @@ export const CHANGE_PASSWORD = gql`
           start_date
           end_date
         }
-        role
       }
     }
   }
@@ -1038,6 +997,7 @@ export const CHANGE_PASSWORD = gql`
 export const REQUEST_PASSWORD_RESET = gql`
   mutation requestPasswordReset($email: String!) {
     requestPasswordReset(email: $email) {
+      # MessageResponse
       status
       message
     }
@@ -1047,6 +1007,7 @@ export const REQUEST_PASSWORD_RESET = gql`
 export const RESET_PASSWORD = gql`
   mutation resetPassword($input: ResetPasswordInput) {
     resetPassword(input: $input) {
+      # UserResponse
       status
       message
       data {
@@ -1065,6 +1026,7 @@ export const RESET_PASSWORD = gql`
         memo
         created_at
         updated_at
+        role
         botAccounts {
           # BotAccount
           id
@@ -1091,7 +1053,6 @@ export const RESET_PASSWORD = gql`
           start_date
           end_date
         }
-        role
       }
     }
   }
@@ -1100,6 +1061,7 @@ export const RESET_PASSWORD = gql`
 export const CHANGE_LOCALE = gql`
   mutation changeLocale($input: UpdateLocaleInput!) {
     changeLocale(input: $input) {
+      # UserResponse
       status
       message
       data {
@@ -1118,6 +1080,7 @@ export const CHANGE_LOCALE = gql`
         memo
         created_at
         updated_at
+        role
         botAccounts {
           # BotAccount
           id
@@ -1144,7 +1107,6 @@ export const CHANGE_LOCALE = gql`
           start_date
           end_date
         }
-        role
       }
     }
   }
@@ -1153,6 +1115,7 @@ export const CHANGE_LOCALE = gql`
 export const SET_LOCALE = gql`
   mutation setLocale($input: UpdateLocaleInput!) {
     setLocale(input: $input) {
+      # MessageResponse
       status
       message
     }
@@ -1162,6 +1125,7 @@ export const SET_LOCALE = gql`
 export const SEND_SMS_CODE = gql`
   mutation sendSmsCode($input: SendSmsCodeInput!) {
     sendSmsCode(input: $input) {
+      # MessageResponse
       status
       message
     }
@@ -1171,6 +1135,7 @@ export const SEND_SMS_CODE = gql`
 export const CHECK_SMS_CODE = gql`
   mutation checkSmsCode($input: CheckSmsCodeInput!) {
     checkSmsCode(input: $input) {
+      # UserResponse
       status
       message
       data {
@@ -1189,6 +1154,7 @@ export const CHECK_SMS_CODE = gql`
         memo
         created_at
         updated_at
+        role
         botAccounts {
           # BotAccount
           id
@@ -1215,7 +1181,6 @@ export const CHECK_SMS_CODE = gql`
           start_date
           end_date
         }
-        role
       }
     }
   }
@@ -1224,6 +1189,7 @@ export const CHECK_SMS_CODE = gql`
 export const CHANGE_NAME = gql`
   mutation changeName($input: ChangeNameInput!) {
     changeName(input: $input) {
+      # UserResponse
       status
       message
       data {
@@ -1242,6 +1208,7 @@ export const CHANGE_NAME = gql`
         memo
         created_at
         updated_at
+        role
         botAccounts {
           # BotAccount
           id
@@ -1268,7 +1235,6 @@ export const CHANGE_NAME = gql`
           start_date
           end_date
         }
-        role
       }
     }
   }
@@ -1277,6 +1243,7 @@ export const CHANGE_NAME = gql`
 export const UPDATE_AUTH_STEP = gql`
   mutation updateAuthStep($input: UpdateAuthStepInput!) {
     updateAuthStep(input: $input) {
+      # UserResponse
       status
       message
       data {
@@ -1295,6 +1262,7 @@ export const UPDATE_AUTH_STEP = gql`
         memo
         created_at
         updated_at
+        role
         botAccounts {
           # BotAccount
           id
@@ -1321,7 +1289,6 @@ export const UPDATE_AUTH_STEP = gql`
           start_date
           end_date
         }
-        role
       }
     }
   }
@@ -1330,6 +1297,7 @@ export const UPDATE_AUTH_STEP = gql`
 export const UPDATE_USER_MEMO = gql`
   mutation updateUserMemo($input: UpdateUserMemoInput!) {
     updateUserMemo(input: $input) {
+      # UserResponse
       status
       message
       data {
@@ -1348,6 +1316,7 @@ export const UPDATE_USER_MEMO = gql`
         memo
         created_at
         updated_at
+        role
         botAccounts {
           # BotAccount
           id
@@ -1374,7 +1343,6 @@ export const UPDATE_USER_MEMO = gql`
           start_date
           end_date
         }
-        role
       }
     }
   }
@@ -1383,6 +1351,7 @@ export const UPDATE_USER_MEMO = gql`
 export const CREATE_FAQ = gql`
   mutation createFaq($input: CreateFaqInput!) {
     createFaq(input: $input) {
+      # Faq
       id
       locale
       type
@@ -1430,6 +1399,7 @@ export const CREATE_FAQ = gql`
 export const UPDATE_FAQ = gql`
   mutation updateFaq($input: UpdateFaqInput!) {
     updateFaq(input: $input) {
+      # Faq
       id
       locale
       type
@@ -1477,6 +1447,7 @@ export const UPDATE_FAQ = gql`
 export const DELETE_FAQ = gql`
   mutation deleteFaq($id: ID!) {
     deleteFaq(id: $id) {
+      # Faq
       id
       locale
       type
@@ -1524,6 +1495,7 @@ export const DELETE_FAQ = gql`
 export const CREATE_NOTICE = gql`
   mutation createNotice($input: CreateNoticeInput!) {
     createNotice(input: $input) {
+      # Notice
       id
       locale
       title
@@ -1570,6 +1542,7 @@ export const CREATE_NOTICE = gql`
 export const UPDATE_NOTICE = gql`
   mutation updateNotice($input: UpdateNoticeInput!) {
     updateNotice(input: $input) {
+      # Notice
       id
       locale
       title
@@ -1616,6 +1589,7 @@ export const UPDATE_NOTICE = gql`
 export const DELETE_NOTICE = gql`
   mutation deleteNotice($id: ID!) {
     deleteNotice(id: $id) {
+      # Notice
       id
       locale
       title
@@ -1662,6 +1636,7 @@ export const DELETE_NOTICE = gql`
 export const CREATE_USER_INTERNAL_WALLET = gql`
   mutation createUserInternalWallet($input: CreateUserInternalWalletInput!) {
     createUserInternalWallet(input: $input) {
+      # InternalWalletResponse
       status
       message
       data {
@@ -1682,6 +1657,7 @@ export const CREATE_USER_INTERNAL_WALLET = gql`
 export const CREATE_BOT_ACCOUNT = gql`
   mutation createBotAccount($input: CreateBotAccountInput!) {
     createBotAccount(input: $input) {
+      # BotResponse
       status
       message
       data {
@@ -1708,6 +1684,7 @@ export const CREATE_BOT_ACCOUNT = gql`
 export const TOGGLE_BOT = gql`
   mutation toggleBot($input: ToggleBotInput!) {
     toggleBot(input: $input) {
+      # BotResponse
       status
       message
       data {
@@ -1734,6 +1711,7 @@ export const TOGGLE_BOT = gql`
 export const VERIFY_EXCHANGE_KEYS = gql`
   mutation verifyExchangeKeys($input: VerifyInput!) {
     verifyExchangeKeys(input: $input) {
+      # VerifyResponse
       ok
       httpStatus
       body
@@ -1746,6 +1724,7 @@ export const VERIFY_EXCHANGE_KEYS = gql`
 export const RECEIVE_COIN = gql`
   mutation receiveCoin($input: ReceiveCoinInput!) {
     receiveCoin(input: $input) {
+      # CountResponse
       status
       message
       count
@@ -1756,6 +1735,7 @@ export const RECEIVE_COIN = gql`
 export const CREATE_TICKET = gql`
   mutation createTicket($input: CreateTicketInput!) {
     createTicket(input: $input) {
+      # Ticket
       id
       name
       days
@@ -1768,6 +1748,7 @@ export const CREATE_TICKET = gql`
 export const UPDATE_TICKET = gql`
   mutation updateTicket($input: UpdateTicketInput!) {
     updateTicket(input: $input) {
+      # Ticket
       id
       name
       days
@@ -1780,6 +1761,7 @@ export const UPDATE_TICKET = gql`
 export const DELETE_TICKET = gql`
   mutation deleteTicket($id: ID!) {
     deleteTicket(id: $id) {
+      # Ticket
       id
       name
       days
@@ -1792,6 +1774,7 @@ export const DELETE_TICKET = gql`
 export const BUY_TICKET = gql`
   mutation buyTicket($id: ID!) {
     buyTicket(id: $id) {
+      # MessageResponse
       status
       message
     }
