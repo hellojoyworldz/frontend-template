@@ -1,4 +1,4 @@
-// font 정의하고 body에  variable class를주입해야 함
+// font 정의하고 body에 variable class를 주입해야 함
 // font 선택은 globals.css에서 lang 속성에 따라 분기 처리
 import localFont from "next/font/local";
 import { Noto_Sans, Noto_Sans_SC, Poppins } from "next/font/google";

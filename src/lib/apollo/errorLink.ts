@@ -4,18 +4,18 @@ import { CombinedGraphQLErrors, CombinedProtocolErrors } from "@apollo/client/er
 const errorLink = new ErrorLink(({ error, operation }) => {
   if (CombinedGraphQLErrors.is(error)) {
     error.errors.forEach(({ message, locations, path }) =>
-      console.log(
+      console.error(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}, operation: ${operation.operationName}`,
       ),
     );
   } else if (CombinedProtocolErrors.is(error)) {
     error.errors.forEach(({ message, extensions }) =>
-      console.log(
+      console.error(
         `[Protocol error]: Message: ${message}, Extensions: ${JSON.stringify(extensions)}, ${operation.operationName}`,
       ),
     );
   } else {
-    console.error(`[Network error]: ${error}, operation: ${operation.operationName} `);
+    console.error(`[Network error]: ${error}, operation: ${operation.operationName}`);
   }
 });
 

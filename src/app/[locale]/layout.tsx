@@ -2,7 +2,8 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import clsx from "clsx";
 import Providers from "./providers";
-import { authOptions } from "@/lib/auth/auth";
+import { authOptions } from "@/lib/auth";
+import { ASSETS } from "@/constants/paths";
 import { pretendard, noto, notoSc, poppins } from "@/lib/fonts";
 import "@/styles/globals.css";
 
@@ -16,7 +17,7 @@ export async function generateMetadata() {
     title: t("title"),
     description: t("description"),
     icons: {
-      icon: `/favicon.ico`,
+      icon: ASSETS.FAVICON,
     },
     openGraph: {
       title: t("title"),
@@ -24,7 +25,7 @@ export async function generateMetadata() {
       siteName: t("title"),
       images: [
         {
-          url: `/opengraph-image.png`,
+          url: ASSETS.OPENGRAPH,
           width: 1200,
           height: 630,
         },

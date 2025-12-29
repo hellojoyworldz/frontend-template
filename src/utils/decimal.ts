@@ -1,6 +1,6 @@
 // 필요할 때 yarn add decimal.js 설치하여 사용 (설치했으면 주석 제거)
 import Decimal from "decimal.js";
-import { applyDecimalPolicy, DecimalUnit } from "@/lib/decimal/decimal";
+import { applyDecimalPolicy, DecimalUnit } from "@/lib/decimal";
 import { DEFAULT_UNIT } from "@/constants/decimal";
 
 type Values = Decimal.Value[];

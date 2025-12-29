@@ -4,8 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export const credentialProvider = CredentialsProvider({
   name: "Credentials",
   credentials: {
-    username: { label: "Username", type: "text", placeholder: "jsmith" },
-    password: { label: "Password", type: "password" },
+    username: { label: "username", type: "text" },
+    password: { label: "password", type: "password" },
   },
   async authorize(credentials) {
     const response = await fetch(process.env.GRAPHQL_URL!, {
@@ -14,8 +14,10 @@ export const credentialProvider = CredentialsProvider({
       body: JSON.stringify({
         query: LOGIN,
         variables: {
-          email: credentials?.username,
-          password: credentials?.password,
+          input: {
+            email: credentials?.username,
+            password: credentials?.password,
+          },
         },
       }),
     });
