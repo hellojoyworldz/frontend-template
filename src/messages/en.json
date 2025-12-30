@@ -20,6 +20,14 @@
     "notFound": "Not Found"
   },
   "validation": {
-    "required": "필수 입력 항목입니다."
+    "required": "필수 입력 항목입니다.",
+    "minLength": "{min}자 이상 입력해주세요.",
+    "maxLength": "{max}자 이하로 입력해주세요.",
+    "pattern": "형식에 맞지 않는 입력입니다.",
+    "email": "유효한 이메일 주소를 입력해주세요.",
+    "id": "영문자, 숫자 포함하여 4자 이상 입력해주세요.",
+    "password": "대문자, 특수문자 1개 이상 포함하여 8자 이상 입력해주세요.",
+    "passwordMatch": "비밀번호가 일치하지 않습니다.",
+    "terms": "약관에 동의해주세요."
   }
 }

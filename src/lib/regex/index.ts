@@ -71,16 +71,18 @@ export const RULES = {
   // 영문/숫자/특수문자 조합, 대문자 또는 특수문자 필수, 8~20자
   EN_NUM_SPPW_REQ_UP_OR_SPPW_8_20: buildRegex({
     allow: ALLOWS.EN_NUM_SPPW,
-    require: [{ set: `${CHARSET.UP}${CHARSET.SPPW}` }],
+    require: [{ set: `${CHARSET.UP}${CHARSET.SPPW}`, min: 1 }],
     min: 8,
     max: 20,
   }),
-  // 영문/숫자/특수문자 조합, 대문자/특수문자 필수, 8~20자
-  EN_NUM_SPPW_REQ_UP_SPPW_8_20: buildRegex({
+  // 영문/숫자/특수문자 조합, 대문자/특수문자 필수, 8자 이상
+  EN_NUM_SPPW_REQ_UP_SPPW_8: buildRegex({
     allow: ALLOWS.EN_NUM_SPPW,
-    require: [{ set: CHARSET.UP }, { set: CHARSET.SPPW }],
+    require: [
+      { set: CHARSET.UP, min: 1 },
+      { set: CHARSET.SPPW, min: 1 },
+    ],
     min: 8,
-    max: 20,
   }),
 };
 
