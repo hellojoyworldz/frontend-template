@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "yarn env:dec && next dev",
+    "build": "yarn env:dec && next build",
     "start": "next start",
     "lint": "eslint",
     "graphql-schema": "node scripts/graphql-schema.js",
@@ -12,7 +12,14 @@
     "graphql-fragments": "node scripts/graphql-fragments.js",
     "graphql-combine": "node scripts/graphql-combine.js",
     "generate": "yarn graphql-schema && yarn graphql-operations && yarn graphql-fragments && yarn graphql-combine",
-    "codegen": "graphql-codegen --config codegen.config.ts"
+    "codegen": "graphql-codegen --config codegen.config.ts",
+    "mkdir:secrets": "mkdir -p secrets",
+    "env:enc:dev": "yarn mkdir:secrets && sops -e .env.development > secrets/env.development.enc",
+    "env:dec:dev": "[ -f secrets/env.development.enc ] && (sops -d secrets/env.development.enc > .env.development.tmp && mv .env.development.tmp .env.development) || (echo \"ℹ️ skip: secrets/env.development.enc not found\" && [ ! -f secrets/env.development.enc ])",
+    "env:enc:prod": "yarn mkdir:secrets && sops -e .env.production > secrets/env.production.enc",
+    "env:dec:prod": "[ -f secrets/env.production.enc ] && (sops -d secrets/env.production.enc > .env.production.tmp && mv .env.production.tmp .env.production) || (echo \"ℹ️ skip: secrets/env.production.enc not found\" && [ ! -f secrets/env.production.enc ])",
+    "env:enc": "yarn env:enc:dev && yarn env:enc:prod",
+    "env:dec": "yarn env:dec:dev && yarn env:dec:prod"
   },
   "dependencies": {
     "@apollo/client": "^4.0.11",

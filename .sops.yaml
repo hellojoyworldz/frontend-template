@@ -1,0 +1,5 @@
+# age public key 등록 - "," 로 다수의 key 등록 가능
+creation_rules:
+  #  - path_regex: .*\.enc$
+  - age: >-
+      age1mfru6z63ucrt029ckm8y5jlztc8sgg2jwndn23z5krp07k3lay5szdssml,age1zfyd9vfen84t2m72jvllf57qjs529gvtxq2uy46j02j8mc5763mq0x4053
