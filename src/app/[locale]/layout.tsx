@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import clsx from "clsx";
 import Providers from "./providers";
@@ -54,12 +54,16 @@ export function generateViewport() {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [locale, session] = await Promise.all([getLocale(), getServerSession(authOptions)]);
+  const [locale, session, messages] = await Promise.all([
+    getLocale(),
+    getServerSession(authOptions),
+    getMessages(),
+  ]);
 
   return (
     <html lang={locale}>
       <body className={clsx(pretendard.variable, noto.variable, notoSc.variable, poppins.variable, "antialiased")}>
-        <Providers locale={locale} session={session}>
+        <Providers locale={locale} session={session} messages={messages}>
           {children}
         </Providers>
       </body>
