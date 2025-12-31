@@ -1,16 +1,24 @@
-// 필요할 때 yarn add decimal.js 설치하여 사용 (설치했으면 주석 제거)
-import { DECIMAL_POLICY } from "@/constants/decimal";
 import Decimal from "decimal.js";
+import { applyDecimalPolicy, type DecimalUnit } from "@/lib/decimal/config";
 
-export type DecimalUnit = "DEFAULT" | "KRW" | "USD";
+type Values = Decimal.Value[];
+type Operation = "plus" | "minus" | "mul" | "div";
 
-// precision - 백엔드 검증이 필요한 경우 값을 백엔드와 일치시켜야 함
-Decimal.set({ precision: 10 });
+const calculateDecimal = (values: Values, unit: DecimalUnit = "DEFAULT", operation: Operation): Decimal => {
+  if (values.length === 0) return new Decimal(0);
 
-export { Decimal };
+  const [first, ...rest] = values.map((v) => new Decimal(v));
+  const result = rest.reduce((acc, cur) => {
+    if (operation === "div" && cur.isZero()) throw new Error("Divide by zero");
 
-export const applyDecimalPolicy = (value: Decimal, unit: DecimalUnit) => {
-  const { scale, rounding } = DECIMAL_POLICY[unit];
+    return acc[operation](cur);
+  }, first);
 
-  return value.toDecimalPlaces(scale, rounding);
+  return applyDecimalPolicy(result, unit);
 };
+
+// 개별 연산 함수
+export const plus = (v: Values, u?: DecimalUnit) => calculateDecimal(v, u, "plus");
+export const minus = (v: Values, u?: DecimalUnit) => calculateDecimal(v, u, "minus");
+export const multiply = (v: Values, u?: DecimalUnit) => calculateDecimal(v, u, "mul");
+export const divide = (v: Values, u?: DecimalUnit) => calculateDecimal(v, u, "div");

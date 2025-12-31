@@ -2,12 +2,10 @@ import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import clsx from "clsx";
 import Providers from "./providers";
+import { SITE, ASSETS } from "@/constants";
 import { authOptions } from "@/lib/auth";
-import { ASSETS } from "@/constants/paths";
 import { pretendard, noto, notoSc, poppins } from "@/lib/fonts";
 import "@/styles/globals.css";
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 
 // metadata
 export async function generateMetadata() {
@@ -35,9 +33,9 @@ export async function generateMetadata() {
       google: "",
       other: {},
     },
-    metadataBase: SITE_URL,
+    metadataBase: SITE.URL,
     alternates: {
-      canonical: SITE_URL,
+      canonical: SITE.URL,
     },
   };
 }
@@ -54,11 +52,7 @@ export function generateViewport() {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [locale, session, messages] = await Promise.all([
-    getLocale(),
-    getServerSession(authOptions),
-    getMessages(),
-  ]);
+  const [locale, session, messages] = await Promise.all([getLocale(), getServerSession(authOptions), getMessages()]);
 
   return (
     <html lang={locale}>

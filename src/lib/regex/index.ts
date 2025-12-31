@@ -37,16 +37,6 @@ export const RULES = {
   SPID: buildRegex({ allow: CHARSET.SPID }),
   SPPW: buildRegex({ allow: CHARSET.SPPW }),
 
-  // 영문/숫자/특수문자 조합, 대문자 2자 이상/소문자 1자 이상 필수, 8~20자
-  EN_NUM_SP_REQ_UP_MIN2_LOW_MIN1_8_20: buildRegex({
-    allow: ALLOWS.EN_NUM_SP,
-    require: [
-      { set: CHARSET.UP, min: 2 },
-      { set: CHARSET.LOW, min: 1 },
-    ],
-    min: 8,
-    max: 20,
-  }),
   // 영문/숫자/특수문자 조합, 대문자 3자 이상/소문자 3자 이하, 대문자 2자 이상+소문자 2자 이하로 시작, 8~20자
   EN_NUM_SP_REQ_UP_MIN3_LOW_MAX3_SEQ_UP_MIN2_LOW_MAX2_8_20: buildRegex({
     allow: ALLOWS.EN_NUM_SP,
@@ -75,13 +65,10 @@ export const RULES = {
     min: 8,
     max: 20,
   }),
-  // 영문/숫자/특수문자 조합, 대문자/특수문자 필수, 8자 이상
-  EN_NUM_SPPW_REQ_UP_SPPW_8: buildRegex({
+  // 영문/숫자/특수문자 조합, 특수문자 필수, 8자 이상
+  EN_NUM_SPPW_REQ_SPPW_8: buildRegex({
     allow: ALLOWS.EN_NUM_SPPW,
-    require: [
-      { set: CHARSET.UP, min: 1 },
-      { set: CHARSET.SPPW, min: 1 },
-    ],
+    require: [{ set: CHARSET.SPPW, min: 1 }],
     min: 8,
   }),
 };
