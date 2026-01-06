@@ -19,7 +19,7 @@ export default function Providers({ children, locale, session, messages, timeZon
   return (
     <NextIntlClientProvider locale={locale} messages={messages} timeZone={timeZone}>
       <ApolloProvider client={client}>
-        <SessionProvider session={session} refetchOnWindowFocus={false}>
+        <SessionProvider session={session} refetchOnWindowFocus={false} refetchInterval={0}>
           <AuthSessionSync />
           <LocaleSync />
           {children}

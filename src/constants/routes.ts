@@ -3,8 +3,8 @@ export const ROUTES = {
   HOME: "/",
   MAIN: "/main",
   AUTH: {
-    LOGIN: "/login",
-    REGISTER: "/register",
+    SIGNIN: "/signin",
+    SIGNUP: "/signup",
   },
   MY: {
     MYPAGE: "/my",
@@ -13,4 +13,4 @@ export const ROUTES = {
 } as const;
 
 // 인증 불필요 페이지 목록
-export const PUBLIC_ROUTES = [ROUTES.HOME, ROUTES.MAIN, ROUTES.AUTH.LOGIN, ROUTES.AUTH.REGISTER];
+export const PUBLIC_ROUTES = [ROUTES.HOME, ROUTES.MAIN, ROUTES.AUTH.SIGNIN, ROUTES.AUTH.SIGNUP];

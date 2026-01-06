@@ -11,19 +11,13 @@ export const AUTH_MAX_AGE = 30 * 24 * 60 * 60;
 export const AUTH_SESSION_ONLY = 60 * 60;
 
 export const RULES = {
-  ID: {
-    MIN: 8,
-    MAX: 20,
-  },
-  PASSWORD: {
-    MIN: 8,
-    MAX: 64,
-  },
+  ID: { MIN: 8, MAX: 20 },
+  PASSWORD: { MIN: 8, MAX: 64 },
 } as const;
 
 export const CODES = {
-  // SIGNIN: next-auth 에러 코드
   ERROR: {
+    // SIGNIN: next-auth 에러 코드
     SIGNIN: {
       CREDENTIALS: "CredentialsSignin",
       OAUTH: "OAuthSignin",
