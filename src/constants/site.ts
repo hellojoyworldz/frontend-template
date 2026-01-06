@@ -7,4 +7,4 @@ export const SITE = {
   SOCIAL: {
     INSTAGRAM: "",
   },
-};
+} as const;

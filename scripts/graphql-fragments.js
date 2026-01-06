@@ -10,6 +10,7 @@ const {
   isScalarType,
   isUnionType,
 } = require("graphql");
+const { GRAPHQL } = require("./constants");
 
 // Object Depth
 const maxDepth = Number("4");
@@ -20,10 +21,10 @@ const excludeWrapperFieldNameGroups = [["data", "paginatorInfo"], ["sample"]];
 // 중첩 객체 생성 여부 (graphql-replace 옵션과 맞춰줘야함)
 const includeCompositeFragments = false;
 
-const schemaPath = path.join(process.cwd(), "src/graphql/schema.graphql");
-const outputDir = path.join(process.cwd(), "src/graphql/auto");
-const outputGraphqlPath = path.join(outputDir, "auto-fragments.graphql");
-const outputTsPath = path.join(outputDir, "auto-fragments.ts");
+const schemaPath = path.join(process.cwd(), GRAPHQL.PATH);
+const outputDir = path.join(process.cwd(), GRAPHQL.AUTO_DIR);
+const outputPath = path.join(outputDir, `${GRAPHQL.FRAGMENTS_NAME}.graphql`);
+const outputTsPath = path.join(outputDir, `${GRAPHQL.FRAGMENTS_NAME}.ts`);
 
 const schemaSDL = fs.readFileSync(schemaPath, "utf8");
 const schema = buildSchema(schemaSDL);
@@ -221,8 +222,8 @@ const fragments = sortFragmentsByDeps(generateFragments());
 // const graphqlOutput = `# Auto-generated. Do not edit.\n# Depth: ${maxDepth}\n\n${fragments
 //   .map((fragment) => fragment.document)
 //   .join("\n\n")}\n`;
-// fs.writeFileSync(outputGraphqlPath, graphqlOutput);
-// console.log(`Generated: ${path.relative(process.cwd(), outputGraphqlPath)}`);
+// fs.writeFileSync(outputPath, graphqlOutput);
+// console.log(`Generated: ${path.relative(process.cwd(), outputPath)}`);
 
 // fragments - ts 파일 생성
 const tsOutput = `// Auto-generated. Do not edit.\n// Depth: ${maxDepth}\nimport { gql } from \"@apollo/client\";\n\n${fragments

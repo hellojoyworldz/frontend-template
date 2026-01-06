@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 
 const authLink = new SetContextLink(async (prevContext) => {
   const session = await getSession();
-  const accessToken = session?.accessToken;
+  const accessToken = session?.access_token;
 
   return {
     headers: {

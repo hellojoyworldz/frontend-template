@@ -4,9 +4,9 @@ export const ASSETS = {
   LOGO: "/logo.png",
   FAVICON: "/favicon.ico",
   OPENGRAPH: "/opengraph-image.png",
-};
+} as const;
 
 // API 경로
 export const API = {
   LOGIN: "/api/auth/login",
-};
+} as const;

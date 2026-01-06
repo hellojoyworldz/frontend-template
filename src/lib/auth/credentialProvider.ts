@@ -1,5 +1,7 @@
-import { LOGIN } from "@/graphql/auth";
+import { cookies } from "next/headers";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
+import { fetchLogin } from "./service";
 
 export const credentialProvider = CredentialsProvider({
   name: "Credentials",
@@ -8,32 +10,21 @@ export const credentialProvider = CredentialsProvider({
     password: { label: "password", type: "password" },
   },
   async authorize(credentials) {
-    const response = await fetch(process.env.GRAPHQL_URL!, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: LOGIN,
-        variables: {
-          input: {
-            email: credentials?.username,
-            password: credentials?.password,
-          },
-        },
-      }),
-    });
-
-    const json = await response.json();
-    const login = json?.data?.login;
-
-    if (!response.ok || !login?.access_token) return null;
+    const cookieStore = await cookies();
+    const locale = cookieStore.get("NEXT_LOCALE")?.value ?? DEFAULT_LOCALE;
+    const data = await fetchLogin(locale, credentials?.username, credentials?.password);
 
     return {
-      id: credentials?.username ?? "credentials",
-      email: credentials?.username,
-      accessToken: login.access_token,
-      refreshToken: login.refresh_token,
-      tokenType: login.token_type,
-      expiresIn: login.expires_in,
+      ...data,
+      id: data.user?.id ?? credentials?.username ?? "credentials",
+      user: data.user,
+      info: {
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        token_type: data.token_type,
+        expires_in: data.expires_in,
+        expires_at: data.expires_at,
+      },
     };
   },
 });

@@ -10,16 +10,17 @@ const {
   isScalarType,
   isUnionType,
 } = require("graphql");
+const { GRAPHQL } = require("./constants");
 
 // Object Depth
 const maxDepth = Number("4");
 // 이름에 포함된 경우 생성 제외 (대소문자 무시)
 const excludeNameKeywords = ["admin", "partner"];
 
-const schemaPath = path.join(process.cwd(), "src/graphql/schema.graphql");
-const outputDir = path.join(process.cwd(), "src/graphql/auto");
-const outputPath = path.join(outputDir, "auto-operations.graphql");
-const outputTsPath = path.join(outputDir, "auto-operations.ts");
+const schemaPath = path.join(process.cwd(), GRAPHQL.SCHEMA_PATH);
+const outputDir = path.join(process.cwd(), GRAPHQL.AUTO_DIR);
+const outputPath = path.join(outputDir, `${GRAPHQL.OPERATIONS_NAME}.graphql`);
+const outputTsPath = path.join(outputDir, `${GRAPHQL.OPERATIONS_NAME}.ts`);
 
 const schemaSDL = fs.readFileSync(schemaPath, "utf8");
 const schema = buildSchema(schemaSDL);
@@ -110,9 +111,8 @@ const buildSelectionDeep = (type, depth, visited) => {
 };
 
 const toConstName = (opType, name) => {
-  // query, mutation 충돌나면 name 대신 prefix 붙이기
-  // const prefix = `${opType}_${name}`;
-  return name
+  const prefix = `${opType}_${name}`;
+  return prefix
     .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
     .replace(/[^a-zA-Z0-9_]/g, "_")
     .toUpperCase();

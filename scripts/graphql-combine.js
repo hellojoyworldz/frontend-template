@@ -1,9 +1,10 @@
 const fs = require("fs");
 const path = require("path");
+const { GRAPHQL } = require("./constants");
 
-const fragmentsPath = path.join(process.cwd(), "src/graphql/auto/auto-fragments.ts");
-const operationsPath = path.join(process.cwd(), "src/graphql/auto/auto-operations.ts");
-const outputPath = path.join(process.cwd(), "src/graphql/auto/auto-combine.ts");
+const fragmentsPath = path.join(process.cwd(), GRAPHQL.AUTO_DIR, `${GRAPHQL.FRAGMENTS_NAME}.ts`);
+const operationsPath = path.join(process.cwd(), GRAPHQL.AUTO_DIR, `${GRAPHQL.OPERATIONS_NAME}.ts`);
+const combinePath = path.join(process.cwd(), GRAPHQL.AUTO_DIR, `${GRAPHQL.COMBINE_NAME}.ts`);
 
 // 중첩 객체로 치환 여부 (graphql-fragments 옵션과 맞춰줘야함)
 const includeCompositeFragments = false;
@@ -180,5 +181,5 @@ if (requiredImports.length > 0 && !updatedBody.includes('from "./auto-fragments"
   }
 }
 
-fs.writeFileSync(outputPath, updatedBody);
-console.log(`Generated: ${path.relative(process.cwd(), outputPath)}`);
+fs.writeFileSync(combinePath, updatedBody);
+console.log(`Generated: ${path.relative(process.cwd(), combinePath)}`);

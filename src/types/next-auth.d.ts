@@ -1,26 +1,49 @@
 import type { DefaultSession, DefaultUser } from "next-auth";
+import type { AdapterUser } from "next-auth/adapters";
+import type { LoginMutation, MeQuery } from "@/graphql/graphql";
+
+export type AuthUser = MeQuery["me"] | LoginMutation["login"]["user"];
 
 declare module "next-auth" {
-  interface Session extends DefaultSession {
-    accessToken?: string;
-    refreshToken?: string;
-    tokenType?: string;
-    expiresIn?: number;
+  interface Session {
+    access_token?: string;
+    refresh_token?: string;
+    token_type?: string;
+    expires_in?: number;
+    expires_at?: number;
+    user?: AuthUser;
+    error?: string;
   }
 
-  interface User extends DefaultUser {
-    accessToken?: string;
-    refreshToken?: string;
-    tokenType?: string;
-    expiresIn?: number;
+  interface User {
+    access_token?: string;
+    refresh_token?: string;
+    token_type?: string;
+    expires_in?: number | string;
+    expires_at?: number | string;
+    user?: AuthUser;
+  }
+}
+
+declare module "next-auth/adapters" {
+  interface AdapterUser {
+    access_token?: string;
+    refresh_token?: string;
+    token_type?: string;
+    expires_in?: number | string;
+    expires_at?: number | string;
+    user?: AuthUser;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    accessToken?: string;
-    refreshToken?: string;
-    tokenType?: string;
-    expiresIn?: number;
+    access_token?: string;
+    refresh_token?: string;
+    token_type?: string;
+    expires_in?: number;
+    expires_at?: number;
+    user?: AuthUser;
+    error?: "RefreshAccessTokenError";
   }
 }

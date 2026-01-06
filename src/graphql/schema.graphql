@@ -1,4 +1,26 @@
 """
+Indicates that an Input Object is a OneOf Input Object (and thus requires exactly one of its fields be provided).
+"""
+directive @oneOf on INPUT_OBJECT
+
+type AccountResponse {
+  """
+  상태 값
+  """
+  status: String
+
+  """
+  메시지
+  """
+  message: String
+
+  """
+  데이터
+  """
+  data: UserAccount
+}
+
+"""
 어드민 정보
 """
 type Admin {
@@ -13,6 +35,53 @@ type Admin {
   역할
   """
   role: String
+}
+
+"""
+어드민 액션
+"""
+type AdminAction {
+  id: ID!
+
+  """
+  어드민 아이디
+  """
+  admin_id: Int
+
+  """
+  액션
+  """
+  action: String
+
+  """
+  ip
+  """
+  ip: String
+
+  """
+  생성일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+}
+
+"""
+A paginated list of AdminAction items.
+"""
+type AdminActionPaginator {
+  """
+  Pagination information about the list of items.
+  """
+  paginatorInfo: PaginatorInfo!
+
+  """
+  A list of AdminAction items.
+  """
+  data: [AdminAction!]!
 }
 
 """
@@ -86,138 +155,29 @@ type AdminPaginator {
 }
 
 """
-관리자 거절 Input
+수량
 """
-input AdminRejectInput {
+type AgentAmount {
   """
-  로그인 아이디
-  """
-  login_id: String!
-}
-
-input AdminTicketInput {
-  """
-  users.id
-  """
-  id: ID!
-
-  """
-  지급 일 수(최대: 100일)
-  """
-  days: Int!
-}
-
-"""
-인증 단계
-"""
-enum AuthStepEnum {
-  """
-  0단계 (미인증)
-  """
-  ZERO
-
-  """
-  1단계 (이메일 인증)
-  """
-  ONE
-
-  """
-  2단계 (승인 대기)
-  """
-  TWO
-
-  """
-  3단계 (관리자 거절)
-  """
-  THREE
-
-  """
-  4단계 (관리자 승인)
-  """
-  FOUR
-}
-
-"""
-봇 계정 정보
-"""
-type BotAccount {
-  id: ID!
-
-  """
-  계정 이름
+  이름
   """
   name: String
 
   """
-  심볼
+  코드
   """
-  symbol: SymbolEnum
+  code: String
 
   """
-  API 키
+  수량
   """
-  api_key: String
-
-  """
-  시크릿 키
-  """
-  secret_key: String
-
-  """
-  테스트넷 사용 여부
-  """
-  sandbox: Boolean
-
-  """
-  레버리지 배수
-  """
-  leverage: Int
-
-  """
-  기본 주문 수량(XRP)
-  """
-  base_qty: Float
-
-  """
-  최대 물타기 진입 횟수
-  """
-  max_entries: Int
-
-  """
-  익절 비율
-  """
-  tp_rate: Float
-
-  """
-  계정 활성화 상태
-  """
-  is_active: Boolean
-
-  """
-  생성일
-  """
-  created_at: DateTime
-
-  """
-  수정일
-  """
-  updated_at: DateTime
-
-  """
-  현재 추가 주문
-  """
-  entries_count: Int
+  agent_fee: Float
 }
 
 """
-봇 포지션
+수량 결과
 """
-enum BotPositionEnum {
-  LONG
-  SHORT
-}
-
-type BotResponse {
+type AgentAmountResponse {
   """
   상태 값
   """
@@ -231,7 +191,107 @@ type BotResponse {
   """
   데이터
   """
-  data: [BotAccount]
+  data: [AgentAmount]
+}
+
+"""
+수량
+"""
+type Amount {
+  """
+  이름
+  """
+  name: String
+
+  """
+  설명
+  """
+  comment: String
+
+  """
+  수량
+  """
+  amount: Float
+}
+
+"""
+수량 결과
+"""
+type AmountResponse {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  데이터
+  """
+  data: [Amount]
+}
+
+"""
+가입 방식
+"""
+enum ApprovedEnum {
+  """
+  자동 가입
+  """
+  AUTO
+
+  """
+  승인제
+  """
+  APPROVED
+}
+
+"""
+길드 승인 Input
+"""
+input ApproveGuildInput {
+  """
+  유저 아이디
+  """
+  user_id: Int!
+
+  """
+  상태 값 (2: 승인, 3: 거부)
+  """
+  status: GuildWaitingStatusEnum!
+
+  """
+  거부 메시지 (3: 거부 상태일 경우만)
+  """
+  message: String
+}
+
+"""
+인증 단계
+"""
+enum AuthStepEnum {
+  """
+  1단계
+  """
+  ONE
+
+  """
+  2단계
+  """
+  TWO
+
+  """
+  3단계
+  """
+  THREE
+
+  """
+  4단계
+  """
+  FOUR
 }
 
 type CacheResponse {
@@ -252,10 +312,70 @@ type CacheResponse {
 }
 
 """
-이름 변경 Input
+코인 보내기 계산
 """
-input ChangeNameInput {
-  name: String!
+type CalculateSendCoinResponse {
+  """
+  상태 값
+  """
+  status: String
+
+  """
+  메시지
+  """
+  message: String
+
+  """
+  보낼 수량
+  """
+  amount: Float
+
+  """
+  총 출금 수수료
+  """
+  total_withdraw_fee: Float
+
+  """
+  실제 수량(출금 수수료 제외 금액)
+  """
+  real_amount: Float
+}
+
+type CalculateUSDTResponse {
+  """
+  전체 수수료
+  """
+  total_fee: Float
+
+  """
+  플랫폼 수수료
+  """
+  platform_fee: Float
+
+  """
+  작성자 수수료
+  """
+  author_fee: Float
+
+  """
+  에이전트 수수료
+  """
+  agent_fee: Float
+
+  """
+  요청 금액
+  """
+  request_price: Float
+
+  """
+  요청 수량
+  """
+  request_amount: Float
+
+  """
+  지급 수량
+  """
+  payment_amount: Float
 }
 
 """
@@ -279,29 +399,190 @@ input ChangePasswordInput {
 }
 
 """
-문자 인증 코드 보내기 Input
+채팅 메시지 정보
 """
-input CheckSmsCodeInput {
-  """
-  국번
-  """
-  country_code: String!
+type ChatMessage {
+  id: ID!
 
   """
-  휴대폰 번호
+  채널 이름
   """
-  phone_number: String!
+  channel_name: String
 
   """
-  문자 인증 코드
+  채널 URL
+  """
+  channel_url: String
+
+  """
+  작성자 아이디
+  """
+  author_id: String
+
+  """
+  신청자 아이디
+  """
+  user_id: String
+
+  """
+  메세지
+  """
+  messages: [ChatMessageItem]
+
+  """
+  저장 시간
+  """
+  saved_at: DateTime
+
+  """
+  생성일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+}
+
+"""
+채팅 메시지 아이템
+"""
+type ChatMessageItem {
+  """
+  유저 아이디
+  """
+  user_id: String
+
+  """
+  메시지
+  """
+  message: String
+
+  """
+  생성일
+  """
+  created_at: DateTime
+}
+
+"""
+문자 인증 코드 검증 - 아이디, 비밀번호 찾기
+"""
+input CheckSmsCodeByGuestInput {
+  """
+  캐시 키
+  """
+  cache_key: String!
+
+  """
+  인증번호
   """
   sms_code: String!
+}
+
+"""
+코인
+"""
+type Coin {
+  id: ID!
+
+  """
+  이름
+  """
+  name: String
+
+  """
+  심볼
+  """
+  symbol: String
+
+  """
+  네트워크
+  """
+  network: String
+
+  """
+  출금 수수료 가중치
+  """
+  withdraw_fee_weight: Float
+
+  """
+  활성화 여부
+  """
+  is_active: Boolean
+
+  """
+  생성일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+}
+
+"""
+코인 통화 시세
+"""
+type CoinCurrency {
+  id: ID!
+
+  """
+  코인 아이디
+  """
+  coin_id: CoinEnum
+
+  """
+  통화 아이디
+  """
+  currency_id: CurrencyEnum
+
+  """
+  매수 호가(팔 때)
+  """
+  bid: Float
+
+  """
+  매도 호가(살 때)
+  """
+  ask: Float
+
+  """
+  생성일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+}
+
+"""
+코인
+"""
+enum CoinEnum {
+  """
+  테더
+  """
+  USDT
 }
 
 """
 코인 타입
 """
 enum CoinTypeEnum {
+  """
+  테더(이더리움)
+  """
+  ETH
+
+  """
+  테더(트론)
+  """
+  TRX
+
   """
   테더(바이낸스)
   """
@@ -338,21 +619,6 @@ input CreateAdminInput {
   관리자 비밀번호
   """
   password: String!
-}
-
-"""
-거래소 API 연결 Input
-"""
-input CreateBotAccountInput {
-  """
-  API 키
-  """
-  api_key: String!
-
-  """
-  SECRET 키
-  """
-  secret_key: String!
 }
 
 """
@@ -408,6 +674,41 @@ input CreateFaqInput {
   업로드된 썸네일 아이디
   """
   thumbnail: Int
+}
+
+"""
+길드 생성 Input
+"""
+input CreateGuildInput {
+  """
+  이름
+  """
+  name: String!
+
+  """
+  설명
+  """
+  description: String
+
+  """
+  가입 방식
+  """
+  is_approved: ApprovedEnum!
+
+  """
+  공개 여부
+  """
+  visibility: VisibilityEnum!
+}
+
+"""
+이미지 생성 Input
+"""
+input CreateImageInput {
+  """
+  이미지
+  """
+  image: Upload!
 }
 
 """
@@ -472,54 +773,244 @@ input CreatePartnerInput {
   password: String!
 
   """
-  수수료
+  출금 수수료
   """
-  fee: Float!
+  withdraw_fee: Float!
 
   """
-  메모1
+  에이전트 수수료
   """
-  memo1: String
-
-  """
-  메모2
-  """
-  memo2: String
+  agent_fee: Float!
 }
 
-"""
-티켓 생성 Input
-"""
-input CreateTicketInput {
+input CreateProfileInput {
+  """
+  추천인 코드
+  """
+  u_code: String
+}
+
+input CreateStoppedInput {
+  id: ID!
+
+  """
+  이미지
+  """
+  images: [Upload!]!
+}
+
+input CreateSuperPartnerInput {
   """
   이름
   """
   name: String!
 
   """
-  일 수
+  비밀번호
   """
-  days: Int!
+  password: String!
 
   """
-  보너스 일 수
+  출금 수수료
   """
-  bonus_days: Int!
+  withdraw_fee: Float!
 
   """
-  가격
+  에이전트 수수료
   """
-  price: Float!
+  agent_fee: Float!
 }
 
-"""
-내부 지갑 생성 Input
-"""
+input CreateTransactionInput {
+  """
+  타입
+  """
+  type: TransactionTypeEnum!
+
+  """
+  공개 여부
+  """
+  visibility: VisibilityEnum!
+
+  """
+  단가
+  """
+  unit_price: Float!
+
+  """
+  총 수량
+  """
+  total_amount: Float!
+
+  """
+  계좌 타입
+  """
+  account_type: UserAccountType!
+
+  """
+  은행
+  """
+  bank: String
+
+  """
+  예금주
+  """
+  depositor: String
+
+  """
+  계좌번호
+  """
+  account_number: String
+
+  """
+  링크
+  """
+  link: String
+}
+
+input CreateUserAccountInput {
+  """
+  별칭
+  """
+  name: String
+
+  """
+  타입 (1:은행 2:페이 3:상품권)
+  """
+  type: UserAccountType
+
+  """
+  은행명
+  """
+  bank: String
+
+  """
+  예금주
+  """
+  depositor: String
+
+  """
+  계좌번호 (1:은행)
+  """
+  account_number: String
+
+  """
+  링크 (2:페이)
+  """
+  link: String
+
+  """
+  대표 여부
+  """
+  is_default: Boolean
+}
+
+input CreateUserExternalWalletInput {
+  """
+  코인 아이디
+  """
+  coin_id: CoinTypeEnum!
+
+  """
+  별칭
+  """
+  name: String
+
+  """
+  지갑 주소
+  """
+  wallet_address: String!
+}
+
 input CreateUserInternalWalletInput {
   """
   코인 아이디
   """
   coin_id: CoinTypeEnum!
+}
+
+input CreateUserTransactionInput {
+  """
+  거래 아이디
+  """
+  transaction_id: Int!
+
+  """
+  요청 수량
+  """
+  request_amount: Float!
+
+  """
+  요청 금액
+  """
+  request_price: Float!
+
+  """
+  계좌 타입
+  """
+  account_type: UserAccountType!
+
+  """
+  은행
+  """
+  bank: String
+
+  """
+  예금주
+  """
+  depositor: String
+
+  """
+  계좌번호
+  """
+  account_number: String
+
+  """
+  링크
+  """
+  link: String
+}
+
+"""
+통화
+"""
+type Currency {
+  id: ID!
+
+  """
+  이름
+  """
+  name: String
+
+  """
+  심볼
+  """
+  symbol: String
+
+  """
+  생성일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+}
+
+"""
+통화
+"""
+enum CurrencyEnum {
+  """
+  원화
+  """
+  KRW
+
+  """
+  달러
+  """
+  USD
 }
 
 """
@@ -528,7 +1019,14 @@ A date string with format `Y-m-d`, e.g. `2011-05-23`.
 scalar Date
 
 input DateRange {
+  """
+  시작일
+  """
   from: Date!
+
+  """
+  종료일
+  """
   to: Date!
 }
 
@@ -538,7 +1036,14 @@ A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`.
 scalar DateTime
 
 input DateTimeRange {
+  """
+  시작시간
+  """
   from: DateTime!
+
+  """
+  종료시간
+  """
   to: DateTime!
 }
 
@@ -552,6 +1057,55 @@ A datetime string in ISO 8601 format in UTC with nanoseconds
 `YYYY-MM-DDTHH:mm:ss.SSSSSSZ`, e.g. `2020-04-20T16:20:04.000000Z`.
 """
 scalar DateTimeUtc
+
+"""
+디바이스 토큰
+"""
+type DeviceToken {
+  id: ID!
+
+  """
+  토큰
+  """
+  token: String!
+
+  """
+  플랫폼
+  """
+  platform: PlatformEnum!
+
+  """
+  마지막 본 시간
+  """
+  last_seen_at: DateTime
+
+  """
+  생성일
+  """
+  created_at: DateTime!
+
+  """
+  수정일
+  """
+  updated_at: DateTime!
+}
+
+type ExternalWalletResponse {
+  """
+  상태 값
+  """
+  status: String
+
+  """
+  메시지
+  """
+  message: String
+
+  """
+  데이터
+  """
+  data: UserExternalWallet
+}
 
 """
 Faq 정보
@@ -696,10 +1250,225 @@ input FaqWhereConditions {
 패스워드 찾기 input
 """
 input ForgotPasswordInput {
+  email: String!
+}
+
+type GetMarketCurrencyResponse {
+  """
+  심볼
+  """
+  symbol: String
+
+  """
+  영문 이름
+  """
+  en_name: String
+
+  """
+  한글 이름
+  """
+  ko_name: String
+
+  """
+  매수 호가(팔 때)
+  """
+  bid: Float
+
+  """
+  매도 호가(살 때)
+  """
+  ask: Float
+}
+
+"""
+길드 정보
+"""
+type Guild {
+  id: ID!
+
+  """
+  길드장 아이디
+  """
+  user_id: Int!
+
   """
   이름
   """
-  login_id: String!
+  name: String!
+
+  """
+  설명
+  """
+  description: String
+
+  """
+  승인 여부(1: 자동가입, 2: 승인제)
+  """
+  is_approved: ApprovedEnum!
+
+  """
+  공개 여부(1: public, 2: private)
+  """
+  visibility: VisibilityEnum!
+
+  """
+  멤버 수
+  """
+  member_count: Int
+
+  """
+  진행중인 거래 수
+  """
+  pending_transaction_count: Int
+
+  """
+  완료된 거래 수
+  """
+  completed_transaction_count: Int
+
+  """
+  총 거래 금액
+  """
+  total_transaction_amount: Float
+
+  """
+  길드장 이메일
+  """
+  master_email: String
+
+  """
+  생성일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+}
+
+"""
+A paginated list of Guild items.
+"""
+type GuildPaginator {
+  """
+  Pagination information about the list of items.
+  """
+  paginatorInfo: PaginatorInfo!
+
+  """
+  A list of Guild items.
+  """
+  data: [Guild!]!
+}
+
+"""
+길드 랭킹 정렬 컬럼
+"""
+enum GuildRankingColumnEnum {
+  """
+  길드원 수
+  """
+  MEMBER_COUNT
+
+  """
+  총 거래 금액
+  """
+  TOTAL_TRANSACTION_AMOUNT
+}
+
+type GuildResponse {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  유저 정보
+  """
+  data: Guild
+}
+
+"""
+길드 대기 목록
+"""
+type GuildWaiting {
+  id: ID!
+
+  """
+  길드 아이디
+  """
+  guild_id: Int
+
+  """
+  유저 아이디
+  """
+  user_id: Int
+
+  """
+  상태 (1: 대기, 2: 승인, 3: 거부)
+  """
+  status: GuildWaitingStatusEnum
+
+  """
+  거부 메시지
+  """
+  message: String
+
+  """
+  생성일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+
+  """
+  유저 정보
+  """
+  user: User
+}
+
+"""
+A paginated list of GuildWaiting items.
+"""
+type GuildWaitingPaginator {
+  """
+  Pagination information about the list of items.
+  """
+  paginatorInfo: PaginatorInfo!
+
+  """
+  A list of GuildWaiting items.
+  """
+  data: [GuildWaiting!]!
+}
+
+"""
+길드 대기 목록 상태
+"""
+enum GuildWaitingStatusEnum {
+  """
+  대기
+  """
+  PENDING
+
+  """
+  승인
+  """
+  APPROVED
+
+  """
+  거부
+  """
+  REJECTED
 }
 
 type Image {
@@ -734,18 +1503,23 @@ type InternalWalletResponse {
   """
   상태 값
   """
-  status: String!
+  status: String
 
   """
   메시지
   """
-  message: String!
+  message: String
 
   """
   데이터
   """
   data: UserInternalWallet
 }
+
+"""
+Arbitrary data encoded in JavaScript Object Notation. See https://www.json.org.
+"""
+scalar JSON
 
 """
 언어 설정
@@ -767,9 +1541,9 @@ enum LocaleStatus {
   CHINESE
 
   """
-  러시아어
+  베트남어
   """
-  RUSSIAN
+  VIETNAM
 }
 
 """
@@ -817,51 +1591,14 @@ type LoginAuthPayload {
 """
 input LoginInput {
   """
-  로그인 아이디
+  이메일
   """
-  login_id: String!
+  email: String!
 
   """
   비밀번호
   """
   password: String!
-}
-
-"""
-마켓 시세
-"""
-type MarketPrice {
-  id: ID!
-
-  """
-  마켓명
-  """
-  name: String
-
-  """
-  엔드포인트
-  """
-  endpoint: String
-
-  """
-  거래쌍
-  """
-  symbol: String
-
-  """
-  시세
-  """
-  price: Float
-
-  """
-  생성일
-  """
-  created_at: DateTime
-
-  """
-  수정일
-  """
-  updated_at: DateTime
 }
 
 type MessageResponse {
@@ -900,9 +1637,9 @@ type Mutation {
   login(input: LoginInput!): LoginAuthPayload
 
   """
-  회원가입
+  유저 등록
   """
-  register(input: RegisterInput!): MessageResponse
+  register(input: RegisterInput!): LoginAuthPayload
 
   """
   리프레쉬 토큰
@@ -912,7 +1649,7 @@ type Mutation {
   """
   로그아웃
   """
-  logoutUser: LoginAuthPayload
+  logoutUser: UserResponse
 
   """
   유저 탈퇴
@@ -940,19 +1677,49 @@ type Mutation {
   changePassword(input: ChangePasswordInput): UserResponse
 
   """
-  패스워드 재설정 메일 전송
-  """
-  requestPasswordReset(email: String!): MessageResponse!
-
-  """
   비밀번호 재설정
   """
   resetPassword(input: ResetPasswordInput): UserResponse
 
   """
-  관리자 권한 부여
+  이름 업데이트
   """
-  createAdmin(input: CreateAdminInput!): MessageResponse
+  updateName(name: String!): UserResponse
+
+  """
+  프로필 작성 - LEVEL 1
+  """
+  createProfile(input: CreateProfileInput!): UserResponse
+
+  """
+  문자 인증 코드 보내기 - LEVEL 2
+  """
+  sendSmsCode(input: SendSmsCodeInput!): UserResponse
+
+  """
+  문자 인증 코드 검증 - LEVEL 2
+  """
+  checkSmsCode(sms_code: String!): UserResponse
+
+  """
+  KYC 생성 - LEVEL 3
+  """
+  createKYC(input: CreateImageInput!): UserResponse
+
+  """
+  KYC 수정 - LEVEL 3
+  """
+  updateKYC(input: UpdateImageInput!): UserResponse
+
+  """
+  상점 생성 - LEVEL 4
+  """
+  createStore(input: CreateImageInput!): UserResponse
+
+  """
+  상점 수정 - LEVEL 4
+  """
+  updateStore(input: UpdateImageInput!): UserResponse
 
   """
   로케일 변경
@@ -965,19 +1732,54 @@ type Mutation {
   setLocale(input: UpdateLocaleInput!): MessageResponse!
 
   """
-  문자 인증 코드 보내기
+  통화 수정
   """
-  sendSmsCode(input: SendSmsCodeInput!): MessageResponse
+  updateMyCurrency(currency_id: CurrencyEnum!): UserResponse
 
   """
-  문자 인증 코드 검증
+  문자 인증 코드 보내기 - 아이디, 비밀번호 찾기
   """
-  checkSmsCode(input: CheckSmsCodeInput!): UserResponse
+  sendSmsCodeByGuest(input: SendSmsCodeByGuestInput!): CacheResponse
 
   """
-  이름 변경
+  문자 인증 코드 검증 - 아이디, 비밀번호 찾기
   """
-  changeName(input: ChangeNameInput!): UserResponse
+  checkSmsCodeByGuest(input: CheckSmsCodeByGuestInput!): UserResponse
+
+  """
+  제휴사 로그인
+  """
+  partnerLogin(input: PartnerLoginInput!): PartnerAuthPayload
+
+  """
+  슈퍼 파트너 등록
+  """
+  createSuperPartner(input: CreateSuperPartnerInput): MessageResponse
+
+  """
+  슈퍼 파트너 수정
+  """
+  updateSuperPartner(input: UpdateSuperPartnerInput): MessageResponse
+
+  """
+  슈퍼 파트너 삭제
+  """
+  deleteSuperPartner(id: ID!): MessageResponse
+
+  """
+  파트너 등록
+  """
+  createPartner(input: CreatePartnerInput): MessageResponse
+
+  """
+  파트너 수정
+  """
+  updatePartner(input: UpdatePartnerInput): MessageResponse
+
+  """
+  파트너 삭제
+  """
+  deletePartner(id: ID!): MessageResponse
 
   """
   관리자 로그인
@@ -985,29 +1787,24 @@ type Mutation {
   adminLogin(input: AdminLoginInput!): AdminAuthPayload
 
   """
-  관리자 거절
+  KYC 반려 - LEVEL 3
   """
-  adminReject(input: AdminRejectInput!): MessageResponse
+  returnKYC(id: ID!): UserResponse
+
+  """
+  상점 반려 - LEVEL 4
+  """
+  returnStore(id: ID!): UserResponse
 
   """
   인증 단계 업데이트
   """
-  updateAuthStep(input: UpdateAuthStepInput!): UserResponse
+  updateAuthStep(input: UpdateAuthStepInput): UserResponse
 
   """
-  유저 메모 작성
+  사이트 설정 수정
   """
-  updateUserMemo(input: UpdateUserMemoInput!): UserResponse
-
-  """
-  관리자 봇 중지
-  """
-  stopBotByAdmin(id: ID!): UserResponse
-
-  """
-  관리자 쿠폰 지급(인증 4단계인 유저만 지급 가능)
-  """
-  adminTicket(input: AdminTicketInput!): UserResponse
+  updateSite(input: UpdateSiteInput!): SiteResponse
 
   """
   Faq 등록
@@ -1040,24 +1837,144 @@ type Mutation {
   deleteNotice(id: ID!): Notice!
 
   """
+  거래 글 생성
+  """
+  createTransaction(input: CreateTransactionInput!): TransactionResponse
+
+  """
+  거래 글 수정
+  """
+  updateTransaction(input: UpdateTransactionInput!): TransactionResponse
+
+  """
+  거래 글 삭제
+  """
+  deleteTransaction(id: ID!): TransactionResponse
+
+  """
+  거래 신청 내역 생성
+  """
+  createUserTransaction(input: CreateUserTransactionInput!): UserTransactionResponse
+
+  """
+  거래 신청 내역 수정
+  """
+  updateUserTransaction(input: UpdateUserTransactionInput!): UserTransactionResponse
+
+  """
+  거래 신청 내역 상태 변경
+  """
+  updateUserTransactionStatus(input: UpdateUserTransactionStatusInput!): UserTransactionResponse
+
+  """
+  거래 신청 내역 삭제
+  """
+  deleteUserTransaction(id: ID!): UserTransactionResponse
+
+  """
+  거래 중지 이미지 업로드
+  """
+  createStopped(input: CreateStoppedInput!): UserTransactionResponse
+
+  """
+  USDT 계산
+  """
+  calculateUSDT(input: CreateUserTransactionInput!): CalculateUSDTResponse
+
+  """
+  유저 계좌 생성
+  """
+  createUserAccount(input: CreateUserAccountInput!): AccountResponse
+
+  """
+  유저 계좌 수정
+  """
+  updateUserAccount(input: UpdateUserAccountInput!): AccountResponse
+
+  """
+  유저 계좌 삭제
+  """
+  deleteUserAccount(id: ID!): AccountResponse
+
+  """
   유저 내부(입금) 지갑 생성
   """
   createUserInternalWallet(input: CreateUserInternalWalletInput!): InternalWalletResponse
 
   """
-  거래소 API 연결
+  유저 외부(출금) 지갑 생성
   """
-  createBotAccount(input: CreateBotAccountInput!): BotResponse
+  createUserExternalWallet(input: CreateUserExternalWalletInput!): ExternalWalletResponse
 
   """
-  AI 오토봇 시작 & 중지
+  유저 외부(출금) 지갑 수정
   """
-  toggleBot(input: ToggleBotInput!): BotResponse
+  updateUserExternalWallet(input: UpdateUserExternalWalletInput!): ExternalWalletResponse
 
   """
-  테스트
+  유저 외부(출금) 지갑 삭제
   """
-  verifyExchangeKeys(input: VerifyInput!): VerifyResponse
+  deleteUserExternalWallet(id: ID!): ExternalWalletResponse
+
+  """
+  길드 생성
+  """
+  createGuild(input: CreateGuildInput!): GuildResponse
+
+  """
+  길드 수정
+  """
+  updateGuild(input: UpdateGuildInput!): GuildResponse
+
+  """
+  길드 삭제
+  """
+  deleteGuild: GuildResponse
+
+  """
+  길드 탈퇴
+  """
+  leaveGuild: GuildResponse
+
+  """
+  길드 강퇴
+  """
+  expelGuild(user_id: Int!): GuildResponse
+
+  """
+  길드 가입 신청
+  """
+  signUpGuild(guild_id: Int!): GuildResponse
+
+  """
+  긷드 가입 취소
+  """
+  cancelGuild: GuildResponse
+
+  """
+  길드 승인
+  """
+  approveGuild(input: ApproveGuildInput!): GuildResponse
+
+  """
+  코인 보내기
+  """
+  sendCoin(input: SendCoinInput!): MessageResponse!
+
+  """
+  코인 보내기 계산
+  """
+  calculateSendCoin(input: SendCoinInput!): CalculateSendCoinResponse!
+
+  """
+  UUID로 코인 보내기
+  """
+  sendCoinByUUID(input: SendCoinBYUUIDInput!): MessageResponse!
+
+  """
+  코인 보내기 승인
+  """
+  reviewSendCoin(input: ReviewSendCoinInput!): MessageResponse!
 
   """
   코인 받기
@@ -1065,44 +1982,41 @@ type Mutation {
   receiveCoin(input: ReceiveCoinInput!): CountResponse!
 
   """
-  티켓 생성
+  코인 정보 수정
   """
-  createTicket(input: CreateTicketInput!): Ticket
+  updateCoin(input: UpdateCoinInput!): MessageResponse!
 
   """
-  티켓 수정
+  디바이스 토큰 등록
   """
-  updateTicket(input: UpdateTicketInput!): Ticket
+  registerDeviceToken(input: RegisterDeviceTokenInput!): DeviceToken!
 
   """
-  티켓 삭제
+  디바이스 토큰 삭제
   """
-  deleteTicket(id: ID!): Ticket
+  deleteDeviceToken(token: String!): Boolean!
 
   """
-  티켓 구매
+  푸시 보내기
   """
-  buyTicket(id: ID!): MessageResponse
+  sendPushToUser(userId: ID!, input: PushNotificationInput!): PushSendReport!
+}
+
+type MyGuildResponse {
+  """
+  길드 아이디
+  """
+  guild_id: Int
 
   """
-  파트너 로그인
+  길드 대기 여부
   """
-  partnerLogin(input: PartnerLoginInput!): PartnerAuthPayload
+  is_guild_waiting: Boolean
 
   """
-  파트너 등록
+  길드 마스터 여부
   """
-  createPartner(input: CreatePartnerInput): MessageResponse
-
-  """
-  파트너 수정
-  """
-  updatePartner(input: UpdatePartnerInput): MessageResponse
-
-  """
-  파트너 삭제
-  """
-  deletePartner(id: ID!): MessageResponse
+  is_guild_master: Boolean
 }
 
 """
@@ -1359,19 +2273,24 @@ type Partner {
   name: String!
 
   """
-  파트너 수수료
+  슈퍼 파트너 코드
   """
-  fee: Float
+  sp_code: String
 
   """
-  메모1
+  내 코드
   """
-  memo1: String
+  my_code: String
 
   """
-  메모2
+  출금 수수료
   """
-  memo2: String
+  withdraw_fee: Float
+
+  """
+  에이전트 수수료
+  """
+  agent_fee: Float
 
   """
   역할
@@ -1446,21 +2365,16 @@ type PartnerPaginator {
   data: [Partner!]!
 }
 
-type PartnerResponse {
+enum PlatformEnum {
   """
-  상태 값
+  ios
   """
-  status: String!
+  IOS
 
   """
-  메시지
+  android
   """
-  message: String!
-
-  """
-  데이터
-  """
-  data: Partner
+  ANDROID
 }
 
 """
@@ -1477,6 +2391,45 @@ type PreviousFaq {
 type PreviousNotice {
   id: ID
   title: String
+}
+
+input PushNotificationInput {
+  """
+  제목
+  """
+  title: String
+
+  """
+  내용
+  """
+  msg: String
+
+  """
+  포워딩 링크
+  """
+  url: String
+
+  """
+  이미지 링크
+  """
+  imageUrl: String
+}
+
+type PushSendReport {
+  """
+  성공 카운트
+  """
+  successCount: Int!
+
+  """
+  실패 카운트
+  """
+  failureCount: Int!
+
+  """
+  유효하지 않은 토큰 목록
+  """
+  invalidTokens: [String!]!
 }
 
 type Query {
@@ -1506,19 +2459,84 @@ type Query {
   user(id: ID!): User
 
   """
+  파트너 상세 정보
+  """
+  partner(id: ID!): Partner
+
+  """
   어드민 상세 정보
   """
   admin(id: ID!): Admin
 
   """
-  유저 통계
+  거래 글 수량 통계
   """
-  UserAmount: UserAmount
+  transactionAmount(
+    """
+    타입
+    """
+    type: TransactionTypeEnum
+
+    """
+    추천인 코드
+    """
+    invite_code: String
+
+    """
+    기간
+    """
+    created_at: DateTimeRange
+  ): AmountResponse
 
   """
-  입출금 통계
+  거래 신청 내역 수량 통계
   """
-  UserWalletHistoryAmount(
+  userTransactionAmount(
+    """
+    타입
+    """
+    type: TransactionTypeEnum
+
+    """
+    상태
+    """
+    status: UserTransactionStatusEnum
+
+    """
+    추천인 코드
+    """
+    invite_code: String
+
+    """
+    탭
+    """
+    tab: UserTransactionTabEnum
+
+    """
+    기간
+    """
+    created_at: DateTimeRange
+  ): AmountResponse
+
+  """
+  거래 신청 내역 정산 통계
+  """
+  userTransactionAgentAmount(
+    """
+    추천인 코드
+    """
+    invite_code: String
+
+    """
+    기간
+    """
+    created_at: DateTimeRange
+  ): AgentAmountResponse
+
+  """
+  입출금 내역 수량 통계 by 어드민
+  """
+  userWalletHistoryAmountByAdmin(
     """
     년(기본은 현재 년도)
     """
@@ -1530,10 +2548,40 @@ type Query {
     month: Int
 
     """
-    타입 (1:입금 2:티켓 구매)
+    타입
     """
     type: UserWalletHistoryType
-  ): Float
+  ): AmountResponse
+
+  """
+  입출금 정산 내역
+  """
+  userWalletHistoryAgentAmount(
+    """
+    년(기본은 현재 년도)
+    """
+    year: Int
+
+    """
+    월(기본은 현재 월)
+    """
+    month: Int
+
+    """
+    추천인 코드
+    """
+    invite_code: String
+  ): AgentAmountResponse
+
+  """
+  신규 거래 신청 내역 카운트 조회
+  """
+  getCountNewUserTransactions(type: RoleEnum): Int
+
+  """
+  사이트 설정
+  """
+  site: Site
 
   """
   Faq 상세 정보
@@ -1546,9 +2594,49 @@ type Query {
   notice(id: ID!): Notice
 
   """
+  거래 글 상세보기
+  """
+  transaction(id: ID!): Transaction
+
+  """
+  거래 신청 내역 상세보기
+  """
+  userTransaction(id: ID!): UserTransaction
+
+  """
+  읽지 않은 거래 신청 내역 카운트
+  """
+  unreadUserTransactionCount: UnreadUserTransactionCountResponse
+
+  """
+  코인 통화 시세 조회
+  """
+  getCoinCurrency: [CoinCurrency]
+
+  """
+  홈 화면 마켓 시세 조회
+  """
+  getMarketCurrency: [GetMarketCurrencyResponse]
+
+  """
   유저 포인트
   """
   userPoint: UserPoint
+
+  """
+  유저 계좌 상세 정보
+  """
+  userAccount(id: ID!): UserAccount
+
+  """
+  유저 계좌 목록
+  """
+  userAccounts: [UserAccount]
+
+  """
+  유저 계좌 목록 by 어드민
+  """
+  userAccountsByAdmin(user_id: Int!): [UserAccount]
 
   """
   유저 내부(입금) 지갑 상세 정보
@@ -1566,35 +2654,69 @@ type Query {
   userInternalWalletsByAdmin(user_id: Int!): [UserInternalWallet]
 
   """
-  마켓 시세
+  유저 외부(출금) 지갑 상세 정보
   """
-  marketPrices: [MarketPrice]
+  userExternalWallet(id: ID!): UserExternalWallet
 
   """
-  티켓 정보
+  유저 외부(출금) 지갑 목록
   """
-  tickets: [Ticket]
+  userExternalWallets: [UserExternalWallet]
 
   """
-  유저 티켓 정보
+  유저 외부(출금) 지갑 목록 by 어드민
   """
-  userTicket: UserTicket
+  userExternalWalletsByAdmin(user_id: Int!): [UserExternalWallet]
 
   """
-  파트너 상세 정보
+  내 길드 정보
   """
-  partner(id: ID!): Partner
+  myGuild: MyGuildResponse
+
+  """
+  길드 상세 정보
+  """
+  guild(id: ID!): Guild
+
+  """
+  입출금 내역 수량 통계 by 유저
+  """
+  userWalletHistoryAmountByUser(
+    """
+    시작일
+    """
+    start_date: Date
+
+    """
+    종료일
+    """
+    end_date: Date
+
+    """
+    타입
+    """
+    type: UserWalletHistoryType
+
+    """
+    조건 검색
+    """
+    where: QueryUserWalletHistoryAmountByUserWhereWhereConditions
+  ): Float!
+  coins(
+    """
+    활성화 여부(1:활성화, 0:비활성화)
+    """
+    is_active: Boolean
+  ): [Coin]
 
   """
   유저 목록
   """
   users(
     auth_step: AuthStepEnum
-    login_id: String
-    name: String
     email: String
-    phone: String
-    uid: String
+    invite_code: String
+    depositor: String
 
     """
     Limits number of fetched items.
@@ -1606,6 +2728,53 @@ type Query {
     """
     page: Int
   ): UserPaginator!
+
+  """
+  슈퍼 파트너 목록
+  """
+  superPartners(
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): PartnerPaginator!
+
+  """
+  파트너 목록
+  """
+  partners(
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): PartnerPaginator!
+
+  """
+  슈퍼 파트너 하위 파트너 목록
+  """
+  partnersBySuperPartner(
+    id: ID!
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): PartnerPaginator!
 
   """
   어드민 목록
@@ -1621,6 +2790,57 @@ type Query {
     """
     page: Int
   ): AdminPaginator!
+
+  """
+  어드민 액션 로그
+  """
+  adminActions(
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): AdminActionPaginator!
+
+  """
+  입출금 내역 by 어드민
+  """
+  userWalletHistoryByAdmin(
+    """
+    년(기본은 현재 년도)
+    """
+    year: Int
+
+    """
+    월(기본은 현재 월)
+    """
+    month: Int
+
+    """
+    타입
+    """
+    type: UserWalletHistoryType
+
+    """
+    조건 검색
+    """
+    where: QueryUserWalletHistoryByAdminWhereWhereConditions
+    orderBy: [QueryUserWalletHistoryByAdminOrderByOrderByClause!]
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): UserWalletHistoryPaginator!
 
   """
   Faq 목록
@@ -1703,21 +2923,216 @@ type Query {
   ): NoticePaginator!
 
   """
+  거래 글 목록 조회 by user
+  """
+  transactionsByUser(
+    type: TransactionTypeEnum
+    visibility: VisibilityEnum
+    orderBy: [QueryTransactionsByUserOrderByOrderByClause!]
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): TransactionPaginator!
+
+  """
+  거래 글 목록 조회 by admin
+  """
+  transactionsByAdmin(
+    type: TransactionTypeEnum
+    invite_code: String
+    created_at: DateTimeRange
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): TransactionPaginator!
+
+  """
+  내 거래 글 목록 조회
+  """
+  myTransactions(
+    type: TransactionTypeEnum
+    orderBy: [QueryMyTransactionsOrderByOrderByClause!]
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): TransactionPaginator!
+
+  """
+  거래 신청 내역 목록 조회
+  """
+  userTransactions(
+    type: TransactionTypeEnum
+    status: UserTransactionStatusEnum
+    invite_code: String
+    tab: UserTransactionTabEnum
+    created_at: DateTimeRange
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): UserTransactionPaginator!
+
+  """
+  내 거래 신청 내역 목록 조회
+  """
+  myUserTransactions(
+    start_date: Date
+    end_date: Date
+    type: TransactionTypeEnum
+    tab: UserTransactionTabEnum
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): UserTransactionPaginator!
+
+  """
+  내 거래 글에 신청한 내역
+  """
+  userTransactionsByMyTransactions(
+    start_date: Date
+    end_date: Date
+    tab: UserTransactionTabEnum
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): UserTransactionPaginator!
+
+  """
+  길드 탐색 목록
+  """
+  guilds(
+    """
+    이름
+    """
+    name: String
+
+    """
+    정렬 컬럼
+    """
+    orderBy: [QueryGuildsOrderByOrderByClause!]
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): GuildPaginator!
+
+  """
+  길드 랭킹 (상위 10위)
+  """
+  guildRanking(
+    """
+    정렬 컬럼
+    """
+    orderBy: [QueryGuildRankingOrderByOrderByClause!]
+
+    """
+    Limits number of fetched items. Maximum allowed value: 10.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): GuildPaginator!
+
+  """
+  길드 대기 목록 (status = 1인 상태)
+  """
+  guildWaitings(
+    email: String
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): GuildWaitingPaginator!
+
+  """
+  길드원 목록 (길드장은 제외)
+  """
+  guildUsers(
+    email: String
+
+    """
+    Limits number of fetched items.
+    """
+    first: Int! = 10
+
+    """
+    The offset from which items are returned.
+    """
+    page: Int
+  ): UserPaginator!
+
+  """
   입출금 내역 by 유저
   """
   userWalletHistoryByUser(
     """
-    년(기본은 현재 년도)
+    시작일
     """
-    year: Int
+    start_date: Date
 
     """
-    월(기본은 현재 월)
+    종료일
     """
-    month: Int
+    end_date: Date
 
     """
-    타입 (1:입금 2:티켓 구매)
+    타입
     """
     type: UserWalletHistoryType
 
@@ -1737,57 +3152,6 @@ type Query {
     """
     page: Int
   ): UserWalletHistoryPaginator!
-
-  """
-  입출금 내역 by 어드민
-  """
-  userWalletHistoryByAdmin(
-    """
-    년(기본은 현재 년도)
-    """
-    year: Int
-
-    """
-    월(기본은 현재 월)
-    """
-    month: Int
-
-    """
-    타입 (1:입금 2:티켓 구매)
-    """
-    type: UserWalletHistoryType
-
-    """
-    조건 검색
-    """
-    where: QueryUserWalletHistoryByAdminWhereWhereConditions
-    orderBy: [QueryUserWalletHistoryByAdminOrderByOrderByClause!]
-
-    """
-    Limits number of fetched items.
-    """
-    first: Int! = 10
-
-    """
-    The offset from which items are returned.
-    """
-    page: Int
-  ): UserWalletHistoryPaginator!
-
-  """
-  파트너 목록
-  """
-  partners(
-    """
-    Limits number of fetched items.
-    """
-    first: Int! = 10
-
-    """
-    The offset from which items are returned.
-    """
-    page: Int
-  ): PartnerPaginator!
 }
 
 """
@@ -1889,6 +3253,59 @@ input QueryFaqsOrderByOrderByClause {
   The column that is used for ordering.
   """
   column: QueryFaqsOrderByColumn!
+
+  """
+  The direction that is used for ordering.
+  """
+  order: SortOrder!
+}
+
+"""
+Order by clause for Query.guildRanking.orderBy.
+"""
+input QueryGuildRankingOrderByOrderByClause {
+  """
+  The column that is used for ordering.
+  """
+  column: GuildRankingColumnEnum!
+
+  """
+  The direction that is used for ordering.
+  """
+  order: SortOrder!
+}
+
+"""
+Order by clause for Query.guilds.orderBy.
+"""
+input QueryGuildsOrderByOrderByClause {
+  """
+  The column that is used for ordering.
+  """
+  column: GuildRankingColumnEnum!
+
+  """
+  The direction that is used for ordering.
+  """
+  order: SortOrder!
+}
+
+"""
+Allowed column names for Query.myTransactions.orderBy.
+"""
+enum QueryMyTransactionsOrderByColumn {
+  UNIT_PRICE
+  ID
+}
+
+"""
+Order by clause for Query.myTransactions.orderBy.
+"""
+input QueryMyTransactionsOrderByOrderByClause {
+  """
+  The column that is used for ordering.
+  """
+  column: QueryMyTransactionsOrderByColumn!
 
   """
   The direction that is used for ordering.
@@ -2000,6 +3417,89 @@ input QueryNoticesOrderByOrderByClause {
   The direction that is used for ordering.
   """
   order: SortOrder!
+}
+
+"""
+Allowed column names for Query.transactionsByUser.orderBy.
+"""
+enum QueryTransactionsByUserOrderByColumn {
+  UNIT_PRICE
+  ID
+}
+
+"""
+Order by clause for Query.transactionsByUser.orderBy.
+"""
+input QueryTransactionsByUserOrderByOrderByClause {
+  """
+  The column that is used for ordering.
+  """
+  column: QueryTransactionsByUserOrderByColumn!
+
+  """
+  The direction that is used for ordering.
+  """
+  order: SortOrder!
+}
+
+"""
+Dynamic WHERE conditions for the `where` argument of the query `userWalletHistoryAmountByUser`.
+"""
+input QueryUserWalletHistoryAmountByUserWhereWhereConditions {
+  """
+  The column that is used for the condition.
+  """
+  column: UserWalletHistoryColumn
+
+  """
+  The operator that is used for the condition.
+  """
+  operator: SQLOperator = EQ
+
+  """
+  The value that is used for the condition.
+  """
+  value: Mixed
+
+  """
+  A set of conditions that requires all conditions to match.
+  """
+  AND: [QueryUserWalletHistoryAmountByUserWhereWhereConditions!]
+
+  """
+  A set of conditions that requires at least one condition to match.
+  """
+  OR: [QueryUserWalletHistoryAmountByUserWhereWhereConditions!]
+
+  """
+  Check whether a relation exists. Extra conditions or a minimum amount can be applied.
+  """
+  HAS: QueryUserWalletHistoryAmountByUserWhereWhereConditionsRelation
+}
+
+"""
+Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `userWalletHistoryAmountByUser`.
+"""
+input QueryUserWalletHistoryAmountByUserWhereWhereConditionsRelation {
+  """
+  The relation that is checked.
+  """
+  relation: String!
+
+  """
+  The comparison operator to test against the amount.
+  """
+  operator: SQLOperator = GTE
+
+  """
+  The amount to test.
+  """
+  amount: Int = 1
+
+  """
+  Additional condition logic.
+  """
+  condition: QueryUserWalletHistoryAmountByUserWhereWhereConditions
 }
 
 """
@@ -2210,14 +3710,26 @@ type RefreshAuthPayload {
   token_type: String
 }
 
+input RegisterDeviceTokenInput {
+  """
+  디바이스 토큰
+  """
+  token: String!
+
+  """
+  플랫폼 (1: ios, 2: android)
+  """
+  platform: PlatformEnum!
+}
+
 """
 유저 등록 Input
 """
 input RegisterInput {
   """
-  로그인 아이디
+  이메일
   """
-  login_id: String!
+  email: String!
 
   """
   이름
@@ -2225,34 +3737,24 @@ input RegisterInput {
   name: String!
 
   """
-  이메일
-  """
-  email: String!
-
-  """
   비밀번호
   """
   password: String!
 
   """
-  국번
+  추천인 코드
   """
-  country_code: String
+  invite_code: String
 
   """
-  휴대폰 번호
+  국가
   """
-  phone_number: String
+  country: String
 
   """
   언어
   """
   locale: String
-
-  """
-  추천인 코드
-  """
-  invite_code: String
 }
 
 """
@@ -2260,14 +3762,9 @@ input RegisterInput {
 """
 input ResetPasswordInput {
   """
-  이메일
+  캐시 키
   """
-  email: String!
-
-  """
-  토큰
-  """
-  token: String!
+  cache_key: String!
 
   """
   새 비밀번호
@@ -2280,6 +3777,28 @@ input ResetPasswordInput {
   password_confirmation: String!
 }
 
+"""
+코인 보내기 승인 Input
+"""
+input ReviewSendCoinInput {
+  id: ID!
+
+  """
+  년(기본은 현재 년도)
+  """
+  year: Int
+
+  """
+  월(기본은 현재 월)
+  """
+  month: Int
+
+  """
+  상태
+  """
+  status: UserWalletHistoryReviewEnum!
+}
+
 enum RoleEnum {
   """
   어드민
@@ -2290,6 +3809,61 @@ enum RoleEnum {
   유저
   """
   USER
+}
+
+"""
+UUID로 코인 보내기 Input
+"""
+input SendCoinBYUUIDInput {
+  """
+  UUID
+  """
+  uuid: String!
+
+  """
+  수량
+  """
+  amount: Float!
+}
+
+"""
+코인 보내기 Input
+"""
+input SendCoinInput {
+  """
+  코인 아이디
+  """
+  coin_id: CoinTypeEnum!
+
+  """
+  지갑 주소
+  """
+  wallet_address: String!
+
+  """
+  수량
+  """
+  amount: Float!
+}
+
+"""
+문자 인증 코드 보내기 - 아이디, 비밀번호 찾기
+"""
+input SendSmsCodeByGuestInput {
+  """
+  이메일
+  """
+  email: String
+
+  """
+  국번
+  """
+  country_code: String!
+
+  """
+  휴대폰 번호
+  """
+  phone_number: String!
 }
 
 """
@@ -2307,39 +3881,70 @@ input SendSmsCodeInput {
   phone_number: String!
 }
 
-"""
-SMS 메시지
-"""
-type SmsMessage {
-  """
-  국번
-  """
-  country_code: String
+type Site {
+  id: ID!
 
   """
-  휴대폰 번호
+  전체 수수료
   """
-  phone_number: String
+  fee: Float
 
   """
-  문자 코드
+  플랫폼 수수료
   """
-  sms_code: String
+  platform_fee: Float
 
   """
-  문자 코드 만료 시간
+  작성자 수수료
   """
-  sms_code_expired_at: DateTime
+  author_fee: Float
 
   """
-  요청
+  전체 추천인 리워드
   """
-  request: String
+  invite_reward: Float
 
   """
-  응답
+  추천인 리워드1 (1뎁스)
   """
-  response: String
+  invite_reward1: Float
+
+  """
+  추천인 리워드2 (2뎁스)
+  """
+  invite_reward2: Float
+
+  """
+  최소 거래 수량
+  """
+  minimum_amount: Float
+
+  """
+  매수 호가 감소
+  """
+  bid_minus: Float
+
+  """
+  매도 호가 증가
+  """
+  ask_plus: Float
+}
+
+type SiteResponse {
+  """
+  상태 값
+  """
+  status: String!
+
+  """
+  메시지
+  """
+  message: String!
+
+  """
+  사이트 정보
+  """
+  data: Site
 }
 
 """
@@ -2432,69 +4037,168 @@ enum SQLOperator {
   IS_NOT_NULL
 }
 
-"""
-심볼
-"""
-enum SymbolEnum {
-  XRP
-  ETH
-}
-
 type Thumbnail {
   id: ID!
   url: String
 }
 
 """
-티켓 정보
+거래 글
 """
-type Ticket {
+type Transaction {
   id: ID!
 
   """
-  이름
+  유저 아이디
   """
-  name: String
+  user_id: Int
 
   """
-  일 수
+  타입
   """
-  days: Int
+  type: TransactionTypeEnum
 
   """
-  보너스 일 수
+  공개 범위
   """
-  bonus_days: Int
+  visibility: VisibilityEnum
 
   """
-  가격
+  코인 아이디
   """
-  price: Float
+  coin_id: Int
+
+  """
+  통화 아이디
+  """
+  currency_id: Int
+
+  """
+  단가
+  """
+  unit_price: Float
+
+  """
+  남은 수량
+  """
+  remaining_amount: Float
+
+  """
+  총 수량
+  """
+  total_amount: Float
+
+  """
+  계좌 타입
+  """
+  account_type: UserAccountType
+
+  """
+  은행
+  """
+  bank: String
+
+  """
+  예금주
+  """
+  depositor: String
+
+  """
+  계좌번호
+  """
+  account_number: String
+
+  """
+  링크
+  """
+  link: String
+
+  """
+  슈퍼 파트너 코드
+  """
+  sp_code: String
+
+  """
+  파트너 코드
+  """
+  p_code: String
+
+  """
+  유저 코드
+  """
+  u_code: String
+
+  """
+  길드 아이디
+  """
+  guild_id: Int
+
+  """
+  생성일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+
+  """
+  작성자
+  """
+  user: User
 }
 
 """
-AI 오토봇 시작 & 중지 Input
+A paginated list of Transaction items.
 """
-input ToggleBotInput {
+type TransactionPaginator {
   """
-  심볼
+  Pagination information about the list of items.
   """
-  symbol: SymbolEnum!
+  paginatorInfo: PaginatorInfo!
 
   """
-  활성화 여부
+  A list of Transaction items.
   """
-  is_active: Boolean!
+  data: [Transaction!]!
+}
+
+"""
+거래 글 결과
+"""
+type TransactionResponse {
+  """
+  상태 값
+  """
+  status: String
 
   """
-  사이즈
+  메시지
   """
-  base_qty: Float
+  message: String
 
   """
-  레버리지
+  데이터
   """
-  leverage: Float
+  data: Transaction
+}
+
+enum TransactionTypeEnum {
+  """
+  전체
+  """
+  ALL
+
+  """
+  구매
+  """
+  BUY
+
+  """
+  판매
+  """
+  SELL
 }
 
 """
@@ -2517,6 +4221,28 @@ enum Trashed {
   WITHOUT
 }
 
+type UnreadUserTransactionCountResponse {
+  """
+  총 카운트
+  """
+  total_unread_count: Int
+
+  """
+  구매 탭 카운트
+  """
+  buy_unread_count: Int
+
+  """
+  판매 탭 카운트
+  """
+  sell_unread_count: Int
+
+  """
+  내 거래 탭 카운트
+  """
+  my_unread_count: Int
+}
+
 """
 인증 단계 업데이트 Input
 """
@@ -2527,11 +4253,20 @@ input UpdateAuthStepInput {
   인증 단계
   """
   auth_step: AuthStepEnum!
+}
+
+input UpdateCoinInput {
+  coin_id: CoinTypeEnum!
 
   """
-  거래소 UID (마에피이지에서 수정할 때만 입력)
+  출금 수수료 가중치
   """
-  uid: String
+  withdraw_fee_weight: Float
+
+  """
+  활성화 여부
+  """
+  is_active: Boolean
 }
 
 """
@@ -2599,6 +4334,41 @@ input UpdateFaqInput {
   삭제할 썸네일 아이디
   """
   deleteThumbnail: Int
+}
+
+"""
+길드 수정 Input
+"""
+input UpdateGuildInput {
+  """
+  이름
+  """
+  name: String
+
+  """
+  설명
+  """
+  description: String
+
+  """
+  가입 방식
+  """
+  is_approved: ApprovedEnum
+
+  """
+  공개 여부
+  """
+  visibility: VisibilityEnum
+}
+
+"""
+이미지 수정 Input
+"""
+input UpdateImageInput {
+  """
+  이미지
+  """
+  image: Upload
 }
 
 """
@@ -2677,50 +4447,67 @@ input UpdatePartnerInput {
   id: ID!
 
   """
+  이름
+  """
+  name: String
+
+  """
   비밀번호
   """
   password: String
 
   """
-  수수료
+  출금 수수료
   """
-  fee: Float
+  withdraw_fee: Float
 
   """
-  메모1
+  에이전트 수수료
   """
-  memo1: String
-
-  """
-  메모2
-  """
-  memo2: String
+  agent_fee: Float
 }
 
 """
-파트너 메모 작성 Input
+사이트 설정 수정 Input
 """
-input UpdatePartnerMemoInput {
+input UpdateSiteInput {
   """
-  partners.id
+  플랫폼 수수료
   """
-  id: ID!
+  platform_fee: Float
 
   """
-  메모1
+  작성자 수수료
   """
-  memo1: String
+  author_fee: Float
 
   """
-  메모2
+  추천인 리워드1
   """
-  memo2: String
+  invite_reward1: Float
+
+  """
+  추천인 리워드2
+  """
+  invite_reward2: Float
+
+  """
+  최소 거래 수량
+  """
+  minimum_amount: Float
+
+  """
+  매수 호가 감소
+  """
+  bid_minus: Float
+
+  """
+  매도 호가 증가
+  """
+  ask_plus: Float
 }
 
-"""
-티켓 수정 Input
-"""
-input UpdateTicketInput {
+input UpdateSuperPartnerInput {
   id: ID!
 
   """
@@ -2729,34 +4516,189 @@ input UpdateTicketInput {
   name: String
 
   """
-  일 수
+  비밀번호
   """
-  days: Int
+  password: String
 
   """
-  보너스 일 수
+  출금 수수료
   """
-  bonus_days: Int
+  withdraw_fee: Float
 
   """
-  가격
+  에이전트 수수료
   """
-  price: Float
+  agent_fee: Float
 }
 
-"""
-유저 메모 작성 Input
-"""
-input UpdateUserMemoInput {
-  """
-  users.id
-  """
+input UpdateTransactionInput {
   id: ID!
 
   """
-  메모
+  공개 여부
   """
-  memo: String
+  visibility: VisibilityEnum
+
+  """
+  단가
+  """
+  unit_price: Float
+
+  """
+  계좌 타입
+  """
+  account_type: UserAccountType
+
+  """
+  은행
+  """
+  bank: String
+
+  """
+  예금주
+  """
+  depositor: String
+
+  """
+  계좌번호
+  """
+  account_number: String
+
+  """
+  링크
+  """
+  link: String
+}
+
+input UpdateUserAccountInput {
+  id: ID!
+
+  """
+  별칭
+  """
+  name: String
+
+  """
+  타입 (1:은행 2:페이 3:상품권)
+  """
+  type: UserAccountType
+
+  """
+  은행명
+  """
+  bank: String
+
+  """
+  예금주
+  """
+  depositor: String
+
+  """
+  계좌번호
+  """
+  account_number: String
+
+  """
+  링크 (2:페이)
+  """
+  link: String
+
+  """
+  대표 여부
+  """
+  is_default: Boolean
+}
+
+input UpdateUserExternalWalletInput {
+  id: ID!
+
+  """
+  코인 아이디
+  """
+  coin_id: CoinTypeEnum
+
+  """
+  별칭
+  """
+  name: String
+
+  """
+  지갑 주소
+  """
+  wallet_address: String
+}
+
+input UpdateUserTransactionInput {
+  id: ID!
+
+  """
+  거래 아이디
+  """
+  transaction_id: Int
+
+  """
+  단가
+  """
+  unit_price: Float
+
+  """
+  요청 수량
+  """
+  request_amount: Float
+
+  """
+  요청 금액
+  """
+  request_price: Float
+
+  """
+  계좌 타입
+  """
+  account_type: UserAccountType
+
+  """
+  은행
+  """
+  bank: String
+
+  """
+  예금주
+  """
+  depositor: String
+
+  """
+  계좌번호
+  """
+  account_number: String
+
+  """
+  링크
+  """
+  link: String
+
+  """
+  상태
+  """
+  status: UserTransactionStatusEnum
+}
+
+input UpdateUserTransactionStatusInput {
+  id: ID!
+
+  """
+  상태
+  """
+  status: UserTransactionStatusEnum!
+
+  """
+  중지 이유
+  """
+  stop_reason: String
+
+  """
+  보낸 사람
+  """
+  sender: String
 }
 
 """
@@ -2768,9 +4710,14 @@ type User {
   id: ID!
 
   """
-  아이디
+  UUID
   """
-  login_id: String
+  uuid: String!
+
+  """
+  이메일
+  """
+  email: String!
 
   """
   이름
@@ -2778,29 +4725,34 @@ type User {
   name: String
 
   """
-  이메일
+  샌드버드 아이디
   """
-  email: String
+  sendbird_id: String
 
   """
-  인증 단계
+  길드 아이디
   """
-  auth_step: AuthStepEnum
+  guild_id: Int
 
   """
-  국번
+  슈퍼 파트너 코드
   """
-  country_code: String
+  sp_code: String
 
   """
-  휴대폰 번호
+  파트너 코드
   """
-  phone_number: String
+  p_code: String
 
   """
-  거래소 UID
+  추천인 코드
   """
-  uid: String
+  u_code: String
+
+  """
+  내 코드
+  """
+  my_code: String
 
   """
   언어
@@ -2808,19 +4760,19 @@ type User {
   locale: String
 
   """
+  국가
+  """
+  country: String
+
+  """
+  통화 아이디
+  """
+  currency_id: CurrencyEnum
+
+  """
   포인트
   """
   point: Float
-
-  """
-  추천인 코드
-  """
-  invite_code: String
-
-  """
-  메모
-  """
-  memo: String
 
   """
   등록일
@@ -2833,14 +4785,19 @@ type User {
   updated_at: DateTime!
 
   """
-  봇 정보
+  유저 상세 정보
   """
-  botAccounts: [BotAccount]
+  userInfo: UserInfo
 
   """
-  티켓 정보
+  KYC 이미지
   """
-  userTicket: UserTicket
+  kycImage: Image
+
+  """
+  상점 등록 이미지
+  """
+  storeImage: Image
 
   """
   역할
@@ -2849,9 +4806,9 @@ type User {
 }
 
 """
-봇 계정 정보 히스토리
+유저 계좌 정보
 """
-type UserAccountHistory {
+type UserAccount {
   id: ID!
 
   """
@@ -2860,9 +4817,39 @@ type UserAccountHistory {
   user_id: Int
 
   """
-  데이터
+  별칭
   """
-  data: String
+  name: String
+
+  """
+  타입 (1:은행 2:페이 3:상품권)
+  """
+  type: UserAccountType
+
+  """
+  은행명
+  """
+  bank: String
+
+  """
+  예금주
+  """
+  depositor: String
+
+  """
+  계좌번호 (1:은행)
+  """
+  account_number: String
+
+  """
+  링크 (2:페이)
+  """
+  link: String
+
+  """
+  대표 여부
+  """
+  is_default: Boolean
 
   """
   등록일
@@ -2875,26 +4862,142 @@ type UserAccountHistory {
   updated_at: DateTime
 }
 
-type UserAmount {
+enum UserAccountType {
   """
-  승인 완료 수
+  은행
   """
-  completed_count: Int
+  BANK
 
   """
-  승인 대기 수
+  페이
   """
-  pending_count: Int
+  PAY
 
   """
-  승인 거절 수
+  상품권
   """
-  reject_count: Int
+  GIFT
 
   """
-  유저 수
+  채팅
   """
-  user_count: Int
+  CHAT
+}
+
+"""
+유저 외부(출금) 지갑 정보
+"""
+type UserExternalWallet {
+  id: ID!
+
+  """
+  유저 아이디
+  """
+  user_id: Int
+
+  """
+  코인 아이디
+  """
+  coin_id: CoinTypeEnum
+
+  """
+  별칭
+  """
+  name: String
+
+  """
+  지갑 주소
+  """
+  wallet_address: String
+
+  """
+  등록일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+}
+
+type UserInfo {
+  id: ID!
+
+  """
+  유저 아이디
+  """
+  user_id: Int
+
+  """
+  인증 단계
+  """
+  auth_step: Int!
+
+  """
+  SMS 문자 코드
+  """
+  sms_code: String
+
+  """
+  SMS 문자 코드 만료 시간
+  """
+  sms_code_expired_at: DateTime
+
+  """
+  국가 코드
+  """
+  country_code: String
+
+  """
+  휴대폰 번호
+  """
+  phone_number: String
+
+  """
+  모든 주문
+  """
+  all_transaction: Int
+
+  """
+  완료 주문
+  """
+  completed_transaction: Int
+
+  """
+  취소 주문
+  """
+  canceled_transaction: Int
+
+  """
+  구매 주문
+  """
+  buy_transaction: Int
+
+  """
+  판매 주문
+  """
+  sell_transaction: Int
+
+  """
+  레벨
+  """
+  level: Int
+
+  """
+  완료율
+  """
+  completion_rate: Float
+
+  """
+  등록일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
 }
 
 """
@@ -2969,6 +5072,11 @@ type UserPoint {
   포인트
   """
   point: Float
+
+  """
+  락 포인트
+  """
+  lock_point: Float
 }
 
 type UserResponse {
@@ -2989,9 +5097,9 @@ type UserResponse {
 }
 
 """
-유저 티켓 정보
+거래 신청 내역
 """
-type UserTicket {
+type UserTransaction {
   id: ID!
 
   """
@@ -3000,24 +5108,241 @@ type UserTicket {
   user_id: Int
 
   """
-  무료 티켓 지급 여부
+  거래 아이디
   """
-  is_free_ticket: Boolean
+  transaction_id: Int
 
   """
-  티켓 보유 여부
+  타입
   """
-  is_ticket: Boolean
+  type: TransactionTypeEnum
 
   """
-  티켓 시작일
+  단가
   """
-  start_date: DateTime
+  unit_price: Float
 
   """
-  티켓 종료일
+  요청 수량
   """
-  end_date: DateTime
+  request_amount: Float
+
+  """
+  요청 금액
+  """
+  request_price: Float
+
+  """
+  총 수수료
+  """
+  total_fee: Float
+
+  """
+  플랫폼 수수료
+  """
+  platform_fee: Float
+
+  """
+  작성자 수수료
+  """
+  author_fee: Float
+
+  """
+  에이전트 수수료
+  """
+  agent_fee: Float
+
+  """
+  지급 수량
+  """
+  payment_amount: Float
+
+  """
+  상태
+  """
+  status: UserTransactionStatusEnum
+
+  """
+  보낸사람
+  """
+  sender: String
+
+  """
+  거래 타입
+  """
+  account_type: UserAccountType
+
+  """
+  은행
+  """
+  bank: String
+
+  """
+  예금주
+  """
+  depositor: String
+
+  """
+  계좌번호
+  """
+  account_number: String
+
+  """
+  링크
+  """
+  link: String
+
+  """
+  슈퍼 파트너 코드
+  """
+  sp_code: String
+
+  """
+  파트너 코드
+  """
+  p_code: String
+
+  """
+  유저 코드
+  """
+  u_code: String
+
+  """
+  길드 아이디
+  """
+  guild_id: Int
+
+  """
+  중지 이유
+  """
+  stop_reason: String
+
+  """
+  생성일
+  """
+  created_at: DateTime
+
+  """
+  수정일
+  """
+  updated_at: DateTime
+
+  """
+  작성자
+  """
+  author: User
+
+  """
+  읽지 않음 여부
+  """
+  unread: Boolean
+
+  """
+  신청자
+  """
+  user: User
+
+  """
+  거래 글
+  """
+  transaction: Transaction
+
+  """
+  채팅 메시지 정보
+  """
+  chatMessage: ChatMessage
+
+  """
+  거래 중지 이미지
+  """
+  images: [Image]
+}
+
+"""
+A paginated list of UserTransaction items.
+"""
+type UserTransactionPaginator {
+  """
+  Pagination information about the list of items.
+  """
+  paginatorInfo: PaginatorInfo!
+
+  """
+  A list of UserTransaction items.
+  """
+  data: [UserTransaction!]!
+}
+
+"""
+거래 신청 내역 결과
+"""
+type UserTransactionResponse {
+  """
+  상태 값
+  """
+  status: String
+
+  """
+  메시지
+  """
+  message: String
+
+  """
+  데이터
+  """
+  data: UserTransaction
+}
+
+enum UserTransactionStatusEnum {
+  """
+  전체
+  """
+  ALL
+
+  """
+  구매: 입금 대기, 판매: 전송 대기
+  """
+  PENDING
+
+  """
+  구매: 입금 완료, 판매: 전송 완료 - LV3
+  """
+  DEPOSIT
+
+  """
+  거래 완료 - LV4
+  """
+  COMPLETED
+
+  """
+  거래 취소
+  """
+  CANCELED
+
+  """
+  거래 중지
+  """
+  STOPPED
+}
+
+"""
+거래 신청 탭 구분
+"""
+enum UserTransactionTabEnum {
+  """
+  전체
+  """
+  ALL
+
+  """
+  거래중: PENDING, DEPOSIT, STOPPED
+  """
+  PENDING
+
+  """
+  거래 완료: COMPLETED, CANCELED
+  """
+  COMPLETED
 }
 
 """
@@ -3037,17 +5362,17 @@ type UserWalletHistory {
   email: String
 
   """
-  타입 (1:입금 2:티켓 구매)
+  타입 1:입금 2:출금 3:리워드
   """
   type: UserWalletHistoryType
 
   """
-  제목
+  제목(다국어 처리)
   """
   title: String
 
   """
-  내용
+  내용(다국어 처리)
   """
   content: String
 
@@ -3067,6 +5392,21 @@ type UserWalletHistory {
   to_address: String
 
   """
+  보내는 사람
+  """
+  sender: String
+
+  """
+  받는 사람
+  """
+  receiver: String
+
+  """
+  거래 신청 아이디
+  """
+  user_transaction_id: Int
+
+  """
   트랜잭션 아이디
   """
   tx_id: String
@@ -3082,14 +5422,44 @@ type UserWalletHistory {
   amount: Float
 
   """
-  출금 수수료
+  총 출금 수수료
   """
-  withdraw_fee: Float
+  total_withdraw_fee: Float
+
+  """
+  코인 출금 수수료
+  """
+  coin_withdraw_fee: Float
+
+  """
+  에이전트 출금 수수료
+  """
+  agent_withdraw_fee: Float
 
   """
   상태 값
   """
   status: UserWalletHistoryStatusEnum
+
+  """
+  슈퍼 파트너 코드
+  """
+  sp_code: String
+
+  """
+  파트너 코드
+  """
+  p_code: String
+
+  """
+  유저 코드
+  """
+  u_code: String
+
+  """
+  길드 아이디
+  """
+  guild_id: Int
 
   """
   등록일
@@ -3179,39 +5549,36 @@ enum UserWalletHistoryType {
   PLUS
 
   """
-  티켓 구매
+  출금
   """
   MINUS
+
+  """
+  리워드
+  """
+  REWARD
 }
 
 """
 회원가입 이메일 인증 input
 """
 input VerifyEmailInput {
-  """
-  인증 토큰
-  """
   token: String!
 }
 
-input VerifyInput {
+"""
+공개 여부
+"""
+enum VisibilityEnum {
   """
-  API 키
+  공개
   """
-  api_key: String!
+  PUBLIC
 
   """
-  시크릿 키
+  비공개
   """
-  secret_key: String!
-}
-
-type VerifyResponse {
-  ok: Boolean!
-  httpStatus: Int!
-  body: String!
-  uid: String
-  balance: String
+  PRIVATE
 }
 
 """

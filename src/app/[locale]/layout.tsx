@@ -1,4 +1,4 @@
-import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import { getLocale, getMessages, getTimeZone, getTranslations } from "next-intl/server";
 import { getServerSession } from "next-auth";
 import clsx from "clsx";
 import Providers from "./providers";
@@ -6,12 +6,17 @@ import { SITE, ASSETS } from "@/constants";
 import { authOptions } from "@/lib/auth";
 import { pretendard, noto, notoSc, poppins } from "@/lib/fonts";
 import "@/styles/globals.css";
+import { PageLayout } from "@/components/layout/PageLayout";
 
 // metadata
 export async function generateMetadata() {
   const t = await getTranslations("meta");
 
   return {
+    metadataBase: new URL(SITE.URL || "http://localhost:3000"),
+    alternates: {
+      canonical: SITE.URL,
+    },
     title: t("title"),
     description: t("description"),
     icons: {
@@ -33,10 +38,6 @@ export async function generateMetadata() {
       google: "",
       other: {},
     },
-    metadataBase: SITE.URL,
-    alternates: {
-      canonical: SITE.URL,
-    },
   };
 }
 
@@ -52,13 +53,18 @@ export function generateViewport() {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [locale, session, messages] = await Promise.all([getLocale(), getServerSession(authOptions), getMessages()]);
+  const [locale, session, messages, timeZone] = await Promise.all([
+    getLocale(),
+    getServerSession(authOptions),
+    getMessages(),
+    getTimeZone(),
+  ]);
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body className={clsx(pretendard.variable, noto.variable, notoSc.variable, poppins.variable, "antialiased")}>
-        <Providers locale={locale} session={session} messages={messages}>
-          {children}
+        <Providers locale={locale} session={session} messages={messages} timeZone={timeZone}>
+          <PageLayout>{children}</PageLayout>
         </Providers>
       </body>
     </html>

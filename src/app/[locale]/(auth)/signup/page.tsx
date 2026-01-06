@@ -1,10 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+import { useSignUpForm } from "@/features/auth/hooks/useSignUpForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSignUpForm } from "@/features/auth/hooks/useSignUpForm";
 
 export default function RegisterPage() {
+  const t = useTranslations();
   const {
     registers,
     onSubmit,
@@ -14,18 +16,18 @@ export default function RegisterPage() {
 
   return (
     <div>
-      <h1>Sign Up</h1>
+      <h1>{t("auth.signUp")}</h1>
       <form onSubmit={onSubmit}>
-        <label htmlFor={registers.username.id}>Username</label>
-        <Input type="text" {...registers.username} placeholder="Username" />
+        <label htmlFor={registers.username.id}>{t("auth.username")}</label>
+        <Input type="text" {...registers.username} placeholder={t("auth.username")} />
         {errors.username?.message && <p>{errors.username.message}</p>}
 
-        <label htmlFor={registers.email.id}>Email</label>
-        <Input type="text" {...registers.email} placeholder="Email" />
+        <label htmlFor={registers.email.id}>{t("auth.email")}</label>
+        <Input type="text" {...registers.email} placeholder={t("auth.email")} />
         {errors.email?.message && <p>{errors.email.message}</p>}
 
-        <label htmlFor={registers.password.id}>Password</label>
-        <Input type="text" {...registers.password} placeholder="Password" />
+        <label htmlFor={registers.password.id}>{t("auth.password")}</label>
+        <Input type="text" {...registers.password} placeholder={t("auth.password")} />
         {errors.password?.message && <p>{errors.password.message}</p>}
 
         <label htmlFor={registers.terms.id}>
@@ -35,7 +37,7 @@ export default function RegisterPage() {
 
         <div>
           <Button type="submit" disabled={isSubmitDisabled}>
-            Sign Up
+            {t("auth.signUp")}
           </Button>
         </div>
       </form>

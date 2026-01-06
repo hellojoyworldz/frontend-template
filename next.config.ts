@@ -2,18 +2,18 @@ import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { withYak } from "next-yak/withYak";
 
-const IMAGES_HOST_URL = process.env.NEXT_PUBLIC_IMAGES_HOST_URL;
-const imagesHostUrl = IMAGES_HOST_URL ? new URL(IMAGES_HOST_URL) : null;
+const IMAGE_HOST_URL = process.env.NEXT_PUBLIC_IMAGE_HOST_URL;
+const imageHostUrl = IMAGE_HOST_URL ? new URL(IMAGE_HOST_URL) : null;
 
 const nextConfig: NextConfig = {
   transpilePackages: ["apollo-upload-client"],
   // 외부 도메인에 호스팅된 이미지를 컴포넌트로 최적화
-  ...(imagesHostUrl && {
+  ...(imageHostUrl && {
     images: {
       remotePatterns: [
         {
-          protocol: imagesHostUrl.protocol === "https:" ? "https" : "http",
-          hostname: imagesHostUrl.hostname,
+          protocol: imageHostUrl.protocol === "https:" ? "https" : "http",
+          hostname: imageHostUrl.hostname,
           port: "",
           pathname: "/**",
         },
